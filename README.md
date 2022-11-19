@@ -1,4 +1,4 @@
-# URL Rewrite Regeneration extension for Magento 2.
+# URL Rewrite Regeneration extension for Magento 2
 The core purpose of this extension is to provide an easy way of regenerating URL rewrites for Magento 2 using CLI.
 
 ## Features
@@ -90,5 +90,5 @@ Please see `LICENSE.txt` for full details of the OSL 3.0 license.
         <img src="https://softcommerce.co.uk/pub/media/banner/logo.svg" width="200" alt="Soft Commerce Ltd" />
     </a>
     <br />
-    <a href="https://softcommerce.io/">https://softcommerce.io/</a>
+    <a href="https://softcommerce.co.uk/">https://softcommerce.io/</a>
 </p>
