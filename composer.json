@@ -1,5 +1,5 @@
 {
-    "name": "softcommerce/module-url-rewrite-generator",
+    "name": "softcommerceltd/module-url-rewrite-generator",
     "description": "URL Rewrite Generator Module.",
     "require": {
         "php": "~7.4.0||~8.0.0||~8.1.0",

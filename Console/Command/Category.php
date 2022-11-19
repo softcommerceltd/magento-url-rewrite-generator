@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class Category extends AbstractGenerator
 {
-    private const COMMAND_NAME = 'softcommerce_url_generator:category';
+    private const COMMAND_NAME = 'url_rewrites:category:generate';
 
     /**
      * @inheritDoc

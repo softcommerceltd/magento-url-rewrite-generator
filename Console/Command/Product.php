@@ -16,7 +16,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class Product extends AbstractGenerator
 {
-    private const COMMAND_NAME = 'softcommerce_url_generator:product';
+    private const COMMAND_NAME = 'url_rewrites:product:generate';
 
     /**
      * @inheritDoc
