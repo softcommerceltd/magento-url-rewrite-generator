@@ -86,7 +86,7 @@ Please see `LICENSE.txt` for full details of the OSL 3.0 license.
 ## Thanks for dropping by
 
 <p align="center">
-    <a href="https://magento.com">
+    <a href="https://softcommerce.co.uk">
         <img src="https://softcommerce.co.uk/pub/media/banner/logo.svg" width="200" alt="Soft Commerce Ltd" />
     </a>
     <br />
