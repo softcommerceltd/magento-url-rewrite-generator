@@ -14,9 +14,9 @@ use Symfony\Component\Console\Input\InputOption;
 /**
  * @inheritDoc
  */
-class Product extends AbstractGenerator
+class GenerateProductUrl extends AbstractGenerator
 {
-    private const COMMAND_NAME = 'url_rewrites:product:generate';
+    private const COMMAND_NAME = 'url_rewrite:product:generate';
 
     /**
      * @inheritDoc

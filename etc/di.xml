@@ -10,17 +10,18 @@
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="softcommerce_url_generate_category" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Console\Command\Category</item>
-                <item name="softcommerce_url_generate_product" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Console\Command\Product</item>
+                <item name="url_rewrite_delete" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Console\Command\DeleteUrlRewrite</item>
+                <item name="url_rewrite_category_generate" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Console\Command\GenerateCategoryUrl</item>
+                <item name="url_rewrite_product_generate" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Console\Command\GenerateProductUrl</item>
             </argument>
         </arguments>
     </type>
-    <type name="SoftCommerce\UrlRewriteGenerator\Console\Command\Category">
+    <type name="SoftCommerce\UrlRewriteGenerator\Console\Command\GenerateCategoryUrl">
         <arguments>
             <argument name="urlRewrite" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\CategoryUrlRewrite</argument>
         </arguments>
     </type>
-    <type name="SoftCommerce\UrlRewriteGenerator\Console\Command\Product">
+    <type name="SoftCommerce\UrlRewriteGenerator\Console\Command\GenerateProductUrl">
         <arguments>
             <argument name="urlRewrite" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\ProductUrlRewrite</argument>
         </arguments>

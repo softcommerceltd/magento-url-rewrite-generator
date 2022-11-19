@@ -2,14 +2,14 @@
 The core purpose of this extension is to provide an easy way of regenerating URL rewrites for Magento 2 using CLI.
 
 ## Features
-- Generates URL rewrites for Category
-- Generates URL rewrites for Product
-- Generates URL for all active stores
-- Supports Search Engine Optimization
-- Compatible with product URL that use category paths
+- Generate URL rewrites for Category
+- Generate URL rewrites for Product
+- Generate URL for all active stores
+- Delete URL rewrites by entity or store criteria
+- Compatible Search Engine Optimization
+- Compatible with product URLs that use category paths
 - Compatible with both Category and Product URL Suffix
-- Compatible with Product URL Suffix
-- Create Permanent Redirect for URLs if URL Key Changed
+- Create permanent redirects for URLs if URL Key Changed
 
 ## Compatibility
 - Open Source >= 2.4.0
@@ -25,8 +25,14 @@ composer require softcommerceltd/module-url-rewrite-generator
 
 ## Post Installation
 
-In production mode:
+```sh
+# Enable the module
+bin/magento module:enable SoftCommerce_UrlRewriteGenerator
 ```
+
+In production mode:
+```sh
+# compile & generate static files
 bin/magento deploy:mode:set production
 ```
 
@@ -41,18 +47,18 @@ bin/magento setup:di:compile
 
 Command options:
 
-``
-bin/magento url_rewrites:category:generate [id|-i]
-``
+```
+bin/magento url_rewrite:category:generate [id|-i]
+```
 
 Example:
 
 ```sh
 # Regenerate URL rewrites for all categories:
-bin/magento url_rewrites:category:generate
+bin/magento url_rewrite:category:generate
 
 # Generate URL rewrites for particular categories with IDs 25 & 26:
-bin/magento url_rewrites:category:generate -i 25,26
+bin/magento url_rewrite:category:generate -i 25,26
 ```
 
 ### Generate URL rewrites for Product
@@ -62,15 +68,31 @@ bin/magento url_rewrites:category:generate -i 25,26
 Command options:
 
 ``
-bin/magento url_rewrites:product:generate [id|-i]
+bin/magento url_rewrite:product:generate [id|-i]
 ``
 
 ```sh
 # Regenerate URL rewrites for all products:
-bin/magento url_rewrites:product:generate
+bin/magento url_rewrite:product:generate
 
 # Generate URL rewrites for particular products with IDs 25 & 26:
-bin/magento url_rewrites:product:generate -i 25,26
+bin/magento url_rewrite:product:generate -i 25,26
+```
+
+### Delete URL rewrites
+
+Command options:
+
+``
+bin/magento url_rewrite:delete [entity|-e || store|-s]
+``
+
+```sh
+# Delete URL rewrites for entity: product with store IDs: 1 and 2
+bin/magento url_rewrite:delete -e product -s 1,2
+
+# Delete URL rewrites for product and category entities with store IDs 1, 2 and 3
+bin/magento url_rewrite:delete -e product,category -s 1,2,3
 ```
 
 ## Support
