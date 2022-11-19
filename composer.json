@@ -3,7 +3,8 @@
     "description": "URL Rewrite Generator Module.",
     "require": {
         "php": "~7.4.0||~8.0.0||~8.1.0",
-        "magento/module-url-rewrite": "^101|^102"
+        "magento/module-url-rewrite": "^101|^102",
+        "softcommerce/module-core": "^1.2"
     },
     "type": "magento2-module",
     "license": [
