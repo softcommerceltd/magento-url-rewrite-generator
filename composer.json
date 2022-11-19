@@ -1,0 +1,19 @@
+{
+    "name": "softcommerce/module-url-rewrite-generator",
+    "description": "URL Rewrite Generator Module.",
+    "require": {
+        "php": "~7.4.0||~8.0.0||~8.1.0",
+        "magento/module-url-rewrite": "^101|^102"
+    },
+    "type": "magento2-module",
+    "license": "EULA",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "SoftCommerce\\UrlRewriteGenerator\\": ""
+        }
+    },
+    "version": "1.0.0"
+}

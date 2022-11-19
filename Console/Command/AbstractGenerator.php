@@ -1,0 +1,88 @@
+<?php
+/**
+ * Copyright © Soft Commerce Ltd. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+declare(strict_types=1);
+
+namespace SoftCommerce\UrlRewriteGenerator\Console\Command;
+
+use Magento\Framework\App\ResourceConnection;
+use Magento\Framework\Console\Cli;
+use Magento\Framework\DB\Adapter\AdapterInterface;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteInterface;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+/**
+ * @inheritDoc
+ */
+abstract class AbstractGenerator extends Command
+{
+    protected const ID_FILTER = 'id';
+    private const ARRAY_CHUNK_SIZE = 20;
+
+    /**
+     * @var AdapterInterface
+     */
+    protected AdapterInterface $connection;
+
+    /**
+     * @var UrlRewriteInterface
+     */
+    protected UrlRewriteInterface $urlRewrite;
+
+    /**
+     * @param ResourceConnection $resourceConnection
+     * @param UrlRewriteInterface $urlRewrite
+     * @param string|null $name
+     */
+    public function __construct(
+        ResourceConnection $resourceConnection,
+        UrlRewriteInterface $urlRewrite,
+        string $name = null
+    ) {
+        $this->connection = $resourceConnection->getConnection();
+        $this->urlRewrite = $urlRewrite;
+        parent::__construct($name);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function execute(InputInterface $input, OutputInterface $output): int
+    {
+        if ($idFilter = $input->getOption(self::ID_FILTER)) {
+            $entityIds = explode(',', str_replace(' ', '', $idFilter));
+        } else {
+            $entityIds = $this->getAllIds();
+        }
+
+        foreach (array_chunk($entityIds, self::ARRAY_CHUNK_SIZE) as $batchEntityIds) {
+            try {
+                $this->urlRewrite->execute($batchEntityIds);
+                if ($result = $this->urlRewrite->getResponseStorage()->getData()) {
+                    $output->writeln(
+                        sprintf(
+                            '<info>URL rewrites have been generated. </info><comment>Effected IDs: %s</comment>',
+                            implode(',', $result)
+                        )
+                    );
+                } else {
+                    $output->writeln('<comment>No URL rewrites have been generated.</comment>');
+                }
+            } catch (\Exception $e) {
+                $output->writeln("<error>{$e->getMessage()}</error>");
+            }
+        }
+
+        return Cli::RETURN_SUCCESS;
+    }
+
+    /**
+     * @return array
+     */
+    abstract protected function getAllIds(): array;
+}
