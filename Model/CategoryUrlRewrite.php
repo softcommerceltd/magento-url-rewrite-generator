@@ -60,6 +60,11 @@ class CategoryUrlRewrite implements UrlRewriteInterface
     private UrlPersistInterface $urlPersist;
 
     /**
+     * @var array
+     */
+    private array $urlInMemory = [];
+
+    /**
      * @param CategoryRepositoryInterface $categoryRepository
      * @param CategoryUrlRewriteGenerator $categoryUrlRewriteGenerator
      * @param DataStorageInterfaceFactory $dataStorageFactory
@@ -169,10 +174,19 @@ class CategoryUrlRewrite implements UrlRewriteInterface
             /** @var Category|CategoryInterface $category */
             $category = $this->categoryRepository->get($category->getEntityId(), $storeId);
             $urlRewrites = $this->categoryUrlRewriteGenerator->generate($category, true);
+
+            foreach (array_keys($urlRewrites) as $index) {
+                if (isset($this->urlInMemory[$index])) {
+                    unset($urlRewrites[$index]);
+                } else {
+                    $this->urlInMemory[$index] = true;
+                }
+            }
             $mergeUrlDataProvider->merge($urlRewrites);
         }
 
         if ($urlData = $mergeUrlDataProvider->getData()) {
+            // var_dump('$urlData', $urlData);
             $this->urlPersist->replace($urlData);
         }
     }
