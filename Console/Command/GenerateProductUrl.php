@@ -57,6 +57,8 @@ class GenerateProductUrl extends AbstractGenerator
                 ' AND ea.attribute_id = cpei.attribute_id AND cpei.store_id = 0',
                 null
             )
+            /*
+             * Allow all product visibility types
             ->where(
                 'cpei.value IN (?)',
                 [
@@ -65,6 +67,7 @@ class GenerateProductUrl extends AbstractGenerator
                     Visibility::VISIBILITY_IN_SEARCH
                 ]
             )
+            */
             ->order('entity_id ASC');
 
         return array_map('intval', $this->connection->fetchCol($select));

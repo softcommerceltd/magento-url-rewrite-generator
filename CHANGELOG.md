@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.0.4
+- **Enhancement**: Reopened: Allow URL generation for all product visibility types. #1
+
 ### Version 1.0.3
 - **Enhancement**: Allow URL generation for all product visibility types. #1
 
