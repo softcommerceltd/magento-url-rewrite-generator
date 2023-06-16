@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.0.3
+- **Enhancement**: Allow URL generation for all product visibility types. #1
+
 ### Version 1.0.2
 - **Enhancement**: Added an option to cache loaded data to URL category rewrite service provider: `SoftCommerce\UrlRewriteGenerator\Model\CategoryUrlRewrite`.
 

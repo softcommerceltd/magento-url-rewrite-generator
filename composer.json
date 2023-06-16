@@ -2,9 +2,9 @@
     "name": "softcommerce/module-url-rewrite-generator",
     "description": "URL Rewrite Generator Module.",
     "require": {
-        "php": "~7.4.0||~8.0.0||~8.1.0",
+        "php": "~8.0.0||~8.1.0||~8.2.0",
         "magento/module-url-rewrite": "^101|^102",
-        "softcommerce/module-core": "^1.2"
+        "softcommerce/module-core": "^1.3"
     },
     "type": "magento2-module",
     "license": [
@@ -19,5 +19,5 @@
             "SoftCommerce\\UrlRewriteGenerator\\": ""
         }
     },
-    "version": "1.0.2"
+    "version": "1.0.3"
 }

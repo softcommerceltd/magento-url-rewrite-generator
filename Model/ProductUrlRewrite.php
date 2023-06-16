@@ -476,7 +476,9 @@ class ProductUrlRewrite implements UrlRewriteInterface
             )->group(
                 'cpe.entity_id'
             )
-            ->where("cpe.$linkField IN (?)", $productIds)
+            ->where("cpe.$linkField IN (?)", $productIds);
+        /*
+         * Allow all visibility types
             ->where(
                 'cpei.value IN (?)',
                 [
@@ -485,6 +487,7 @@ class ProductUrlRewrite implements UrlRewriteInterface
                     Visibility::VISIBILITY_IN_SEARCH
                 ]
             );
+        */
 
         $websiteIdToStoreIds = $this->websiteStorage->getWebsiteIdToStoreIds();
         return array_map(function ($item) use ($websiteIdToStoreIds) {
