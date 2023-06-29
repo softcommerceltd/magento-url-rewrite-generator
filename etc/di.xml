@@ -26,4 +26,30 @@
             <argument name="urlRewrite" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\ProductUrlRewrite</argument>
         </arguments>
     </type>
+    <!-- Logger -->
+    <virtualType name="SoftCommerce\UrlRewriteGenerator\VirtualStreamHandler" type="Magento\Framework\Logger\Handler\Base">
+        <arguments>
+            <argument name="fileName" xsi:type="string">var/log/url-rewrite-generator.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SoftCommerce\UrlRewriteGenerator\VirtualRotationStreamHandler" type="SoftCommerce\Core\Logger\Handler\RotationSteamHandler">
+        <arguments>
+            <argument name="fileName" xsi:type="string">var/log/url-rewrite-generator.log</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="SoftCommerce\UrlRewriteGenerator\VirtualLogger" type="SoftCommerce\Core\Logger\LogProcessor">
+        <arguments>
+            <argument name="handlers" xsi:type="array">
+                <item name="debug" xsi:type="object">SoftCommerce\UrlRewriteGenerator\VirtualStreamHandler</item>
+                <item name="rotation_debug" xsi:type="object">SoftCommerce\UrlRewriteGenerator\VirtualRotationStreamHandler</item>
+                <item name="mail" xsi:type="object">SoftCommerce\Core\Logger\Handler\MailStreamHandler</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="SoftCommerce\UrlRewriteGenerator\Cron\Backend\ProductUrlGenerator">
+        <arguments>
+            <argument name="logger" xsi:type="object">SoftCommerce\UrlRewriteGenerator\VirtualLogger</argument>
+            <argument name="urlRewrite" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\ProductUrlRewrite</argument>
+        </arguments>
+    </type>
 </config>

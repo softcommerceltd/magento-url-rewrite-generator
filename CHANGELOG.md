@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.0.5
+- **Feature**: Add cron schedule for product URL rewrite generator [#2]
+
 ### Version 1.0.4
 - **Enhancement**: Reopened: Allow URL generation for all product visibility types. #1
 

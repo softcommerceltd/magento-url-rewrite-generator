@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Soft Commerce Ltd. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="url_rewrite_generator" translate="label" type="text" sortOrder="999" showInDefault="1" showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>URL Rewrite Generator</label>
+            <tab>softcommerce_tab</tab>
+            <resource>SoftCommerce_UrlRewriteGenerator::url_rewrite_generator_config</resource>
+            <group id="product_schedule_config" translate="label" type="text" sortOrder="1" showInDefault="1">
+                <label>Product Schedule Config</label>
+                <field id="is_active" translate="label comment" type="select" sortOrder="1" showInDefault="1">
+                    <label>Enable Scheduler</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="cron_frequency" translate="label" type="text" sortOrder="2" showInDefault="1">
+                    <label>Cron Schedule</label>
+                    <comment>Leave empty to disable unattended queue. Default: runs at 03:15.</comment>
+                    <depends>
+                        <field id="is_active">1</field>
+                    </depends>
+                </field>
+                <field id="process_batch_size" translate="label" type="text" sortOrder="3" showInDefault="1">
+                    <label>Schedule process batch size</label>
+                    <comment>Number of items processed per batch.</comment>
+                    <depends>
+                        <field id="is_active">1</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Soft Commerce Ltd. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <url_rewrite_generator>
+            <product_schedule_config>
+                <is_active>0</is_active>
+                <cron_frequency>15 3 * * *</cron_frequency>
+                <process_batch_size>100</process_batch_size>
+            </product_schedule_config>
+        </url_rewrite_generator>
+    </default>
+</config>

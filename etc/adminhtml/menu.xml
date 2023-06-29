@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Soft Commerce Ltd. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="SoftCommerce_UrlRewriteGenerator::url_rewrite_generator_config"
+             title="URL Rewrite Generator"
+             translate="title"
+             module="SoftCommerce_url_rewrite_generator"
+             sortOrder="999"
+             parent="SoftCommerce_Core::config"
+             action="adminhtml/system_config/edit/section/url_rewrite_generator/"
+             resource="SoftCommerce_UrlRewriteGenerator::url_rewrite_generator_config"/>
+    </menu>
+</config>

@@ -8,7 +8,6 @@ declare(strict_types=1);
 
 namespace SoftCommerce\UrlRewriteGenerator\Console\Command;
 
-use Magento\Catalog\Model\Product\Visibility;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -42,32 +41,7 @@ class GenerateProductUrl extends AbstractGenerator
     protected function getAllIds(): array
     {
         $select = $this->connection->select()
-            ->from(
-                ['cpe' => $this->connection->getTableName('catalog_product_entity')],
-                'entity_id'
-            )
-            ->joinLeft(
-                ['ea' => $this->connection->getTableName('eav_attribute')],
-                'ea.attribute_code = \'visibility\'',
-                null
-            )
-            ->joinLeft(
-                ['cpei' => $this->connection->getTableName('catalog_product_entity_int')],
-                'cpe.entity_id  = cpei.entity_id' .
-                ' AND ea.attribute_id = cpei.attribute_id AND cpei.store_id = 0',
-                null
-            )
-            /*
-             * Allow all product visibility types
-            ->where(
-                'cpei.value IN (?)',
-                [
-                    Visibility::VISIBILITY_BOTH,
-                    Visibility::VISIBILITY_IN_CATALOG,
-                    Visibility::VISIBILITY_IN_SEARCH
-                ]
-            )
-            */
+            ->from($this->connection->getTableName('catalog_product_entity'), 'entity_id')
             ->order('entity_id ASC');
 
         return array_map('intval', $this->connection->fetchCol($select));

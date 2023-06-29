@@ -186,7 +186,6 @@ class CategoryUrlRewrite implements UrlRewriteInterface
         }
 
         if ($urlData = $mergeUrlDataProvider->getData()) {
-            // var_dump('$urlData', $urlData);
             $this->urlPersist->replace($urlData);
         }
     }
