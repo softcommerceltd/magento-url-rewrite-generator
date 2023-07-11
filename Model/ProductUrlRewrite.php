@@ -20,6 +20,7 @@ use Magento\CatalogUrlRewrite\Model\ProductUrlRewriteGenerator;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\UrlRewrite\Model\Exception\UrlAlreadyExistsException;
 use Magento\UrlRewrite\Model\MergeDataProviderFactory;
@@ -253,6 +254,12 @@ class ProductUrlRewrite implements UrlRewriteInterface
         $identifierFieldName = $this->getEntityMetadata->getIdentifierField();
         foreach ($storeIds as $storeId) {
             $attributeValues = $this->productResource->getAttributeRawValue($productId, $attributeCodes, $storeId);
+            if (!is_array($attributeValues)) {
+                throw new LocalizedException(
+                    __('Could not retrieve required attributes.')
+                );
+            }
+
             $attributeValues[$identifierFieldName] = $productId;
             $attributeValues['store_id'] = $storeId;
             $attributeValues['save_rewrites_history'] = true;

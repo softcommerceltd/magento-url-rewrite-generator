@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.0.6
+- **Fix**: Cannot access offset of type string on string in ProductUrlRewrite.php at line: 256 [#3]
+
 ### Version 1.0.5
 - **Feature**: Add cron schedule for product URL rewrite generator [#2]
 
