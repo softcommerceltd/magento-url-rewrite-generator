@@ -447,9 +447,9 @@ class ProductUrlRewrite implements UrlRewriteInterface
         }
 
         $linkField = $this->getEntityMetadata->getLinkField();
-        $columns = ['entity_id', ProductInterface::SKU];
+        $columns = ['cpe.entity_id', 'cpe.' . ProductInterface::SKU];
         if ($linkField !== $this->getEntityMetadata->getIdentifierField()) {
-            $columns[] = $linkField;
+            $columns[] = "cpe.$linkField";
         }
 
         $select = $this->connection->select()

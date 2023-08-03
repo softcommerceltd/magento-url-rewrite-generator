@@ -45,7 +45,7 @@ class GenerateProductUrl extends AbstractGenerator
         $select = $this->connection->select()
             ->from(
                 ['cpe' => $this->connection->getTableName('catalog_product_entity')],
-                'entity_id'
+                'cpe.entity_id'
             )
             ->joinLeft(
                 ['ea' => $this->connection->getTableName('eav_attribute')],
@@ -58,7 +58,6 @@ class GenerateProductUrl extends AbstractGenerator
                 ' AND ea.attribute_id = cpei.attribute_id AND cpei.store_id = 0',
                 null
             )
-            ->from($this->connection->getTableName('catalog_product_entity'), 'entity_id')
             ->order('entity_id ASC');
 
         if ($this->scopeConfig->getValue(
