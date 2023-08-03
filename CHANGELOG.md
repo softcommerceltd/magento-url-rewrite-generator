@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.0.7
+- **Enhancement**: An option to import products with status not visible individually.
+
 ### Version 1.0.6
 - **Fix**: Cannot access offset of type string on string in ProductUrlRewrite.php at line: 256 [#3]
 

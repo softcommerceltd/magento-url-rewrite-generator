@@ -8,6 +8,8 @@ declare(strict_types=1);
 
 namespace SoftCommerce\UrlRewriteGenerator\Console\Command;
 
+use Magento\Catalog\Model\Product\Visibility;
+use Magento\Store\Model\ScopeInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -41,8 +43,37 @@ class GenerateProductUrl extends AbstractGenerator
     protected function getAllIds(): array
     {
         $select = $this->connection->select()
+            ->from(
+                ['cpe' => $this->connection->getTableName('catalog_product_entity')],
+                'entity_id'
+            )
+            ->joinLeft(
+                ['ea' => $this->connection->getTableName('eav_attribute')],
+                'ea.attribute_code = \'visibility\'',
+                null
+            )
+            ->joinLeft(
+                ['cpei' => $this->connection->getTableName('catalog_product_entity_int')],
+                'cpe.entity_id  = cpei.entity_id' .
+                ' AND ea.attribute_id = cpei.attribute_id AND cpei.store_id = 0',
+                null
+            )
             ->from($this->connection->getTableName('catalog_product_entity'), 'entity_id')
             ->order('entity_id ASC');
+
+        if ($this->scopeConfig->getValue(
+            'url_rewrite_generator/general/include_invisible_product',
+            ScopeInterface::SCOPE_WEBSITE
+        )) {
+            $select->where(
+                'cpei.value IN (?)',
+                [
+                    Visibility::VISIBILITY_BOTH,
+                    Visibility::VISIBILITY_IN_CATALOG,
+                    Visibility::VISIBILITY_IN_SEARCH
+                ]
+            );
+        }
 
         return array_map('intval', $this->connection->fetchCol($select));
     }

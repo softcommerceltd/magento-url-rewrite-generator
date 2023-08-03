@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace SoftCommerce\UrlRewriteGenerator\Console\Command;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Console\Cli;
 use Magento\Framework\DB\Adapter\AdapterInterface;
@@ -30,21 +31,29 @@ abstract class AbstractGenerator extends Command
     protected AdapterInterface $connection;
 
     /**
+     * @var ScopeConfigInterface
+     */
+    protected ScopeConfigInterface $scopeConfig;
+
+    /**
      * @var UrlRewriteInterface
      */
     protected UrlRewriteInterface $urlRewrite;
 
     /**
      * @param ResourceConnection $resourceConnection
+     * @param ScopeConfigInterface $scopeConfig
      * @param UrlRewriteInterface $urlRewrite
      * @param string|null $name
      */
     public function __construct(
         ResourceConnection $resourceConnection,
+        ScopeConfigInterface $scopeConfig,
         UrlRewriteInterface $urlRewrite,
         string $name = null
     ) {
         $this->connection = $resourceConnection->getConnection();
+        $this->scopeConfig = $scopeConfig;
         $this->urlRewrite = $urlRewrite;
         parent::__construct($name);
     }

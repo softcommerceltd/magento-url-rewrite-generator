@@ -22,6 +22,7 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Store\Model\ScopeInterface;
 use Magento\UrlRewrite\Model\Exception\UrlAlreadyExistsException;
 use Magento\UrlRewrite\Model\MergeDataProviderFactory;
 use Magento\UrlRewrite\Model\OptionProvider;
@@ -484,9 +485,12 @@ class ProductUrlRewrite implements UrlRewriteInterface
                 'cpe.entity_id'
             )
             ->where("cpe.$linkField IN (?)", $productIds);
-        /*
-         * Allow all visibility types
-            ->where(
+
+        if ($this->scopeConfig->getValue(
+            'url_rewrite_generator/general/include_invisible_product',
+            ScopeInterface::SCOPE_WEBSITE
+        )) {
+            $select->where(
                 'cpei.value IN (?)',
                 [
                     Visibility::VISIBILITY_BOTH,
@@ -494,7 +498,7 @@ class ProductUrlRewrite implements UrlRewriteInterface
                     Visibility::VISIBILITY_IN_SEARCH
                 ]
             );
-        */
+        }
 
         $websiteIdToStoreIds = $this->websiteStorage->getWebsiteIdToStoreIds();
         return array_map(function ($item) use ($websiteIdToStoreIds) {

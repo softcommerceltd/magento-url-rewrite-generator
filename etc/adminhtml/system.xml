@@ -12,8 +12,16 @@
             <label>URL Rewrite Generator</label>
             <tab>softcommerce_tab</tab>
             <resource>SoftCommerce_UrlRewriteGenerator::url_rewrite_generator_config</resource>
+            <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1">
+                <label>General Settings</label>
+                <field id="include_invisible_product" translate="label comment" type="select" sortOrder="1" showInDefault="1">
+                    <label>Include Invisible Product</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>If enabled, products with visibility "not visible individually" will be included in the URL rewrite generation.</comment>
+                </field>
+            </group>
             <group id="product_schedule_config" translate="label" type="text" sortOrder="1" showInDefault="1">
-                <label>Product Schedule Config</label>
+                <label>Schedule Settings</label>
                 <field id="is_active" translate="label comment" type="select" sortOrder="1" showInDefault="1">
                     <label>Enable Scheduler</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
