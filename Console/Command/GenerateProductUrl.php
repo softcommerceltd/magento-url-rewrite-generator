@@ -58,10 +58,10 @@ class GenerateProductUrl extends AbstractGenerator
                 ' AND ea.attribute_id = cpei.attribute_id AND cpei.store_id = 0',
                 null
             )
-            ->order('entity_id ASC');
+            ->order('entity_id DESC');
 
-        if ($this->scopeConfig->getValue(
-            'url_rewrite_generator/general/include_invisible_product',
+        if (!$this->scopeConfig->isSetFlag(
+            'url_rewrite_generator/product_entity_config/include_invisible_product',
             ScopeInterface::SCOPE_WEBSITE
         )) {
             $select->where(

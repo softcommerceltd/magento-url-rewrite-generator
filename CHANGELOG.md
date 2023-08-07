@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.0.8
+- **Fix**: Apply a fix to url generation for products not visible individually [#4]
+
 ### Version 1.0.7
 - **Enhancement**: An option to import products with status not visible individually.
 

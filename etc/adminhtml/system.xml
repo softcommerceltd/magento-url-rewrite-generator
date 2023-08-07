@@ -12,32 +12,51 @@
             <label>URL Rewrite Generator</label>
             <tab>softcommerce_tab</tab>
             <resource>SoftCommerce_UrlRewriteGenerator::url_rewrite_generator_config</resource>
-            <group id="general" translate="label" type="text" sortOrder="1" showInDefault="1">
-                <label>General Settings</label>
-                <field id="include_invisible_product" translate="label comment" type="select" sortOrder="1" showInDefault="1">
+            <group id="product_entity_config" translate="label" type="text" sortOrder="1" showInDefault="1">
+                <label>Product Entity Settings</label>
+                <field id="heading_general_config" translate="label comment" type="text" showInDefault="1" showInWebsite="1">
+                    <label>General Configuration</label>
+                    <frontend_model>SoftCommerce\Core\Block\Adminhtml\System\Config\Form\Field\FieldHeading</frontend_model>
+                </field>
+                <field id="include_invisible_product" translate="label comment" type="select" showInDefault="1">
                     <label>Include Invisible Product</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
-                    <comment>If enabled, products with visibility "not visible individually" will be included in the URL rewrite generation.</comment>
+                    <comment>If enabled, products with visibility "Not visible individually" will be included in the URL rewrite generation. Default: No.</comment>
                 </field>
-            </group>
-            <group id="product_schedule_config" translate="label" type="text" sortOrder="1" showInDefault="1">
-                <label>Schedule Settings</label>
-                <field id="is_active" translate="label comment" type="select" sortOrder="1" showInDefault="1">
+                <field id="enable_unique_url" translate="label comment" type="select" showInDefault="1">
+                    <label>Enable Unique Category/Product URL</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>
+                        If enabled, the product will be accessible from one unique URL. Despite being assigned to multiple categories,
+                        the URL will be limited to one unique path based on the settings in the following section. Default: No.</comment>
+                </field>
+                <field id="unique_url_opts" translate="label comment" type="select" showInDefault="1">
+                    <label>Unique URL Options</label>
+                    <source_model>SoftCommerce\UrlRewriteGenerator\Model\Config\Source\UniqueUrlOptions</source_model>
+                    <depends>
+                        <field id="enable_unique_url">1</field>
+                    </depends>
+                </field>
+                <field id="heading_schedule_config" translate="label comment" type="text" showInDefault="1">
+                    <label>Schedule Configuration</label>
+                    <frontend_model>SoftCommerce\Core\Block\Adminhtml\System\Config\Form\Field\FieldHeading</frontend_model>
+                </field>
+                <field id="enable_schedule" translate="label comment" type="select" showInDefault="1">
                     <label>Enable Scheduler</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="cron_frequency" translate="label" type="text" sortOrder="2" showInDefault="1">
+                <field id="cron_frequency" translate="label" type="text" showInDefault="1">
                     <label>Cron Schedule</label>
                     <comment>Leave empty to disable unattended queue. Default: runs at 03:15.</comment>
                     <depends>
-                        <field id="is_active">1</field>
+                        <field id="enable_schedule">1</field>
                     </depends>
                 </field>
-                <field id="process_batch_size" translate="label" type="text" sortOrder="3" showInDefault="1">
+                <field id="process_batch_size" translate="label" type="text" showInDefault="1">
                     <label>Schedule process batch size</label>
                     <comment>Number of items processed per batch.</comment>
                     <depends>
-                        <field id="is_active">1</field>
+                        <field id="enable_schedule">1</field>
                     </depends>
                 </field>
             </group>

@@ -463,12 +463,6 @@ class ProductUrlRewrite implements UrlRewriteInterface
                 null
             )
             ->joinLeft(
-                ['cpei' => $this->connection->getTableName('catalog_product_entity_int')],
-                'cpe.' . $linkField . ' = cpei.' . $linkField .
-                ' AND ea.attribute_id = cpei.attribute_id AND cpei.store_id = 0',
-                null
-            )
-            ->joinLeft(
                 ['ccp' => $this->connection->getTableName('catalog_category_product')],
                 'cpe.entity_id = ccp.product_id',
                 [
@@ -485,20 +479,6 @@ class ProductUrlRewrite implements UrlRewriteInterface
                 'cpe.entity_id'
             )
             ->where("cpe.$linkField IN (?)", $productIds);
-
-        if ($this->scopeConfig->getValue(
-            'url_rewrite_generator/general/include_invisible_product',
-            ScopeInterface::SCOPE_WEBSITE
-        )) {
-            $select->where(
-                'cpei.value IN (?)',
-                [
-                    Visibility::VISIBILITY_BOTH,
-                    Visibility::VISIBILITY_IN_CATALOG,
-                    Visibility::VISIBILITY_IN_SEARCH
-                ]
-            );
-        }
 
         $websiteIdToStoreIds = $this->websiteStorage->getWebsiteIdToStoreIds();
         return array_map(function ($item) use ($websiteIdToStoreIds) {

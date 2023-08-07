@@ -8,7 +8,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
     <group id="default">
         <job name="product_url_rewrite_generator" instance="SoftCommerce\UrlRewriteGenerator\Cron\Backend\ProductUrlGenerator" method="execute">
-            <config_path>url_rewrite_generator/product_schedule_config/cron_frequency</config_path>
+            <config_path>url_rewrite_generator/product_entity_config/cron_frequency</config_path>
         </job>
     </group>
 </config>
