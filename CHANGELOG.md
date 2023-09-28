@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.0.9
+- **Enhancement**: New option to check if scheduler is enabled before processing a scheduled cron job. [#5]
+
 ### Version 1.0.8
 - **Fix**: Apply a fix to url generation for products not visible individually [#4]
 

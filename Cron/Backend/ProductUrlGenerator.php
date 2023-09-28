@@ -66,6 +66,10 @@ class ProductUrlGenerator
      */
     public function execute(): void
     {
+        if (!$this->scopeConfig->isSetFlag(self::XML_PATH_IS_ACTIVE)) {
+            return;
+        }
+
         $batch = (int) $this->scopeConfig->getValue(self::XML_PATH_BATCH_SIZE) ?: 20;
 
         foreach (array_chunk($this->getProductIds(), $batch) as $batchEntityIds) {
