@@ -36,7 +36,7 @@ use SoftCommerce\Core\Framework\MessageStorageInterface;
 use SoftCommerce\Core\Framework\MessageStorageInterfaceFactory;
 use SoftCommerce\Core\Model\Source\Status;
 use SoftCommerce\Core\Model\Utils\GetEntityMetadataInterface;
-use SoftCommerce\Core\Model\Utils\WebsiteStorageInterface;
+use SoftCommerce\Core\Model\Store\WebsiteStorageInterface;
 use function array_map;
 use function explode;
 use function implode;

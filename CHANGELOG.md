@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.1.0
+- **Compatibility**: Added compatibility for `SoftCommerce_Core` module.
+
 ### Version 1.0.9
 - **Enhancement**: New option to check if scheduler is enabled before processing a scheduled cron job. [#5]
 
