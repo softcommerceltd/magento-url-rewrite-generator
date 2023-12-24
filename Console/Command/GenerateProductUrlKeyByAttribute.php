@@ -15,7 +15,7 @@ use Magento\Framework\Console\Cli;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Filter\FilterManager;
 use Magento\Store\Model\ScopeInterface;
-use SoftCommerce\Core\Model\Utils\GetEntityTypeIdInterface;
+use SoftCommerce\Core\Model\Eav\GetEntityTypeIdInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

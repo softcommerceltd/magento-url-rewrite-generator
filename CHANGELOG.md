@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.1.2
+- **Compatibility**: Added compatibility with `SoftCommerce_Core` module.
+
 ### Version 1.1.1
 - **Enhancement**: New functionality to generate URL by attribute.
 
