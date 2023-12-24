@@ -15,7 +15,7 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class GenerateCategoryUrl extends AbstractGenerator
 {
-    private const COMMAND_NAME = 'url_rewrite:category:generate';
+    private const COMMAND_NAME = 'url_rewrite:generate:category';
 
     /**
      * @inheritDoc
