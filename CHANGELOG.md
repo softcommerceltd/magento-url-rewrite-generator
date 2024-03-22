@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.1.3
+- **Fix** Undefined constant SoftCommerce\UrlRewriteGenerator\Cron\Backend\ProductUrlGenerator::XML_PATH_IS_ACTIVE [#6]
+
 ### Version 1.1.2
 - **Compatibility**: Added compatibility with `SoftCommerce_Core` module.
 

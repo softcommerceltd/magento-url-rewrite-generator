@@ -22,6 +22,7 @@ use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteInterface;
 class ProductUrlGenerator
 {
     private const XML_PATH_BATCH_SIZE = 'url_rewrite_generator/product_schedule_config/process_batch_size';
+    private const XML_PATH_IS_ACTIVE = 'url_rewrite_generator/product_entity_config/enable_schedule';
 
     /**
      * @var AdapterInterface
