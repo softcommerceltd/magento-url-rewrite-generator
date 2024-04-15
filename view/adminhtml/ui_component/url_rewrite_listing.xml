@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Soft Commerce Ltd. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <settings>
+        <buttons>
+            <button name="addItem" class="SoftCommerce\UrlRewriteGenerator\Ui\Component\Control\ImportModalButton"/>
+        </buttons>
+    </settings>
+    <container name="url_rewrite_import_form_modal">
+        <modal name="form_modal">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="additionalForGroup" xsi:type="boolean">true</item>
+                    <item name="displayArea" xsi:type="string">insideGroup</item>
+                </item>
+            </argument>
+            <settings>
+                <options>
+                    <option name="title" xsi:type="string">Import URL Rewrites</option>
+                </options>
+            </settings>
+            <insertForm name="softcommerce_urlrewrite_import_form" component="SoftCommerce_UrlRewriteGenerator/js/components/ur-rewrite-import-form">
+                <argument name="data" xsi:type="array">
+                    <item name="config" xsi:type="array">
+                        <item name="listingProvider" xsi:type="string">url_rewrite_listing.url_rewrite_listing_data_source</item>
+                        <item name="formModalProvider" xsi:type="string">${ $.parentName }</item>
+                    </item>
+                </argument>
+                <settings>
+                    <formSubmitType>ajax</formSubmitType>
+                    <columnsProvider>ns = notification_area, index = columns</columnsProvider>
+                    <renderUrl path="mui/index/render_handle">
+                        <param name="handle">softcommerce_urlrewrite_index</param>
+                        <param name="buttons">1</param>
+                    </renderUrl>
+                    <loading>false</loading>
+                    <toolbarContainer>${ $.parentName }</toolbarContainer>
+                    <ns>softcommerce_urlrewrite_import_form</ns>
+                    <externalProvider>${ $.ns }.softcommerce_urlrewrite_import_form_data_source</externalProvider>
+                </settings>
+            </insertForm>
+        </modal>
+    </container>
+</listing>

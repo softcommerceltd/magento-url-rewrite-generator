@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * Copyright © Soft Commerce Ltd. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<form xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">softcommerce_urlrewrite_import_form.softcommerce_urlrewrite_import_form_data_source</item>
+            <item name="component" xsi:type="string">Magento_Ui/js/form/form</item>
+        </item>
+        <item name="label" xsi:type="string" translate="true">Import URL Rewrites</item>
+        <item name="template" xsi:type="string">templates/form/collapsible</item>
+    </argument>
+    <settings>
+        <label translate="true">Import URL Rewrites</label>
+        <dataScope>data</dataScope>
+        <namespace>softcommerce_urlrewrite_import_form</namespace>
+        <ajaxSave>true</ajaxSave>
+        <ajaxSaveType>simple</ajaxSaveType>
+        <deps>
+            <dep>softcommerce_urlrewrite_import_form.softcommerce_urlrewrite_import_form_data_source</dep>
+        </deps>
+        <buttons>
+            <button name="reset">
+                <class>reset</class>
+                <label translate="true">Reset</label>
+            </button>
+            <button name="save">
+                <class>save primary</class>
+                <label translate="true">Import URLs</label>
+            </button>
+        </buttons>
+    </settings>
+    <dataSource name="softcommerce_urlrewrite_import_form_data_source" component="Magento_Ui/js/form/provider">
+        <argument name="data" xsi:type="array">
+            <item name="js_config" xsi:type="array">
+                <item name="component" xsi:type="string">Magento_Ui/js/form/provider</item>
+            </item>
+        </argument>
+        <settings>
+            <submitUrl path="softcommerce/urlRewrite/import"/>
+        </settings>
+        <dataProvider class="SoftCommerce\UrlRewriteGenerator\Ui\DataProvider\UrlRewriteImportDataProvider" name="softcommerce_urlrewrite_import_form_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>entity_id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <fieldset name="general">
+        <settings>
+            <label translate="true">Upload CSV file</label>
+            <componentType>fieldset</componentType>
+        </settings>
+        <field name="source_file" formElement="fileUploader">
+            <argument name="data" xsi:type="array">
+                <item name="config" xsi:type="array">
+                    <item name="source" xsi:type="string">general</item>
+                </item>
+            </argument>
+            <settings>
+                <componentType>fileUploader</componentType>
+                <dataScope>source_file</dataScope>
+                <label translate="true">CSV file</label>
+                <required>true</required>
+                <validation>
+                    <rule name="required-entry" xsi:type="boolean">true</rule>
+                </validation>
+            </settings>
+            <formElements>
+                <fileUploader>
+                    <settings>
+                        <allowedExtensions>csv</allowedExtensions>
+                        <maxFileSize>2097152</maxFileSize>
+                        <uploaderConfig>
+                            <param xsi:type="string" name="url">softcommerce/urlRewrite/upload</param>
+                        </uploaderConfig>
+                    </settings>
+                </fileUploader>
+            </formElements>
+        </field>
+    </fieldset>
+</form>

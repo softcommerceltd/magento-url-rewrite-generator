@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Soft Commerce Ltd. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/consumer.xsd">
+    <consumer name="url.rewrite.import.processor" queue="url.rewrite.import.processor" connection="db" maxMessages="1000" consumerInstance="Magento\Framework\MessageQueue\BatchConsumer" handler="SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Mq\Consumer::execute" />
+</config>

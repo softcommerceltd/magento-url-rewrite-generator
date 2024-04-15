@@ -12,7 +12,6 @@ use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Category;
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\CatalogImportExport\Model\Import\Proxy\ProductFactory;
 use Magento\CatalogUrlRewrite\Model\ProductUrlPathGenerator;
@@ -22,7 +21,6 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Store\Model\ScopeInterface;
 use Magento\UrlRewrite\Model\Exception\UrlAlreadyExistsException;
 use Magento\UrlRewrite\Model\MergeDataProviderFactory;
 use Magento\UrlRewrite\Model\OptionProvider;
@@ -34,7 +32,7 @@ use SoftCommerce\Core\Framework\DataStorageInterface;
 use SoftCommerce\Core\Framework\DataStorageInterfaceFactory;
 use SoftCommerce\Core\Framework\MessageStorageInterface;
 use SoftCommerce\Core\Framework\MessageStorageInterfaceFactory;
-use SoftCommerce\Core\Model\Source\Status;
+use SoftCommerce\Core\Model\Source\StatusInterface;
 use SoftCommerce\Core\Model\Utils\GetEntityMetadataInterface;
 use SoftCommerce\Core\Model\Store\WebsiteStorageInterface;
 use function array_map;
@@ -225,7 +223,7 @@ class ProductUrlRewrite implements UrlRewriteInterface
                         $e->getMessage()
                     ),
                     $productId,
-                    Status::ERROR
+                    StatusInterface::ERROR
                 );
             }
         }
@@ -246,6 +244,7 @@ class ProductUrlRewrite implements UrlRewriteInterface
      * @param array $storeIds
      * @param array $categoryIds
      * @return void
+     * @throws LocalizedException
      * @throws NoSuchEntityException
      * @throws UrlAlreadyExistsException
      */

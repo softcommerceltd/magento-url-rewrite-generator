@@ -9,6 +9,7 @@
     <module name="SoftCommerce_UrlRewriteGenerator">
         <sequence>
             <module name="Magento_UrlRewrite"/>
+            <module name="Magento_ImportExport"/>
             <module name="SoftCommerce_Core"/>
         </sequence>
     </module>

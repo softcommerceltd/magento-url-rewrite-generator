@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.2.0
+- **Feature** New functionality to import URL rewrites from CSV file [#7]
+
 ### Version 1.1.3
 - **Fix** Undefined constant SoftCommerce\UrlRewriteGenerator\Cron\Backend\ProductUrlGenerator::XML_PATH_IS_ACTIVE [#6]
 

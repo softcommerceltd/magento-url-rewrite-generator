@@ -14,6 +14,11 @@
                         <resource id="SoftCommerce_UrlRewriteGenerator::url_rewrite_generator_config" title="URL Rewrite Generator Configuration" translate="title" sortOrder="20"/>
                     </resource>
                 </resource>
+                <resource id="Magento_Backend::system">
+                    <resource id="Magento_Backend::convert">
+                        <resource id="SoftCommerce_UrlRewriteGenerator::import_export" title="Import/Export URL rewrites" sortOrder="30" />
+                    </resource>
+                </resource>
             </resource>
         </resources>
     </acl>
