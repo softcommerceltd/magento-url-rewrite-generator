@@ -6,12 +6,12 @@
 
 declare(strict_types=1);
 
-namespace SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Validator;
+namespace SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Validator;
 
 use Magento\Framework\Validator\AbstractValidator;
 use Magento\UrlRewrite\Model\OptionProvider;
 use Magento\UrlRewrite\Service\V1\Data\UrlRewrite;
-use SoftCommerce\UrlRewriteGenerator\Model\ImportExport\ImportInterface;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImportInterface;
 
 /**
  * @inheritDoc
@@ -25,7 +25,7 @@ class RedirectType extends AbstractValidator
     {
         $this->_clearMessages();
 
-        if (empty($value[ImportInterface::COLUMN_NO_REDIRECT_TYPE])) {
+        if (empty($value[UrlRewriteImportInterface::COLUMN_NO_REDIRECT_TYPE])) {
             $this->_addMessages([
                 __('Missing value for column: "%1"', UrlRewrite::REDIRECT_TYPE)
             ]);
@@ -33,7 +33,7 @@ class RedirectType extends AbstractValidator
         }
 
         $acceptedValues = [0, OptionProvider::PERMANENT, OptionProvider::TEMPORARY];
-        if (!in_array($value[ImportInterface::COLUMN_NO_REDIRECT_TYPE], $acceptedValues)) {
+        if (!in_array($value[UrlRewriteImportInterface::COLUMN_NO_REDIRECT_TYPE], $acceptedValues)) {
             $this->_addMessages([
                 __(
                     'Wrong value specified for column: "%1". Accepted values: "%2"',

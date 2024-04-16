@@ -6,10 +6,11 @@
 
 declare(strict_types=1);
 
-namespace SoftCommerce\UrlRewriteGenerator\Model\ImportExport;
+namespace SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport;
 
 use Magento\Framework\Exception\LocalizedException;
 use Magento\UrlRewrite\Service\V1\Data\UrlRewrite;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImportInterface;
 
 /**
  * Class Report
@@ -49,7 +50,7 @@ class Report
             UrlRewrite::TARGET_PATH,
             UrlRewrite::REDIRECT_TYPE,
             UrlRewrite::STORE_ID,
-            ImportInterface::COLUMN_MESSAGES
+            UrlRewriteImportInterface::COLUMN_MESSAGES
         ]);
 
         foreach ($rows as $row) {

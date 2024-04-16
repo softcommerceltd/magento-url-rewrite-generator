@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace SoftCommerce\UrlRewriteGenerator\Model\ImportExport;
+namespace SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport;
 
 use Magento\Framework\ValidatorFactory;
 use Magento\Framework\Validator;

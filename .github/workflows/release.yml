@@ -12,8 +12,8 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          name: 1.2.0 [CE|EE|ECE 2.4.0-2.4.7] 15 Apr 2024
-          tag_name: 1.2.0
-          body: "New functionality to import URL rewrites from CSV file [#7]"
+          name: 1.2.1 [CE|EE|ECE 2.4.0-2.4.7] 16 Apr 2024
+          tag_name: 1.2.1
+          body: "Add report for asynchronous bulk operations [#8]"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

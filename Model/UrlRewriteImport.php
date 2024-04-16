@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace SoftCommerce\UrlRewriteGenerator\Model\ImportExport;
+namespace SoftCommerce\UrlRewriteGenerator\Model;
 
 use Magento\Framework\Exception\ConfigurationMismatchException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -19,16 +19,19 @@ use Magento\UrlRewrite\Model\MergeDataProviderFactory;
 use Magento\UrlRewrite\Model\UrlFinderInterface;
 use Magento\UrlRewrite\Model\UrlPersistInterface;
 use Magento\UrlRewrite\Service\V1\Data\UrlRewrite;
-use Magento\Framework\Exception\LocalizedException;
 use Magento\UrlRewrite\Service\V1\Data\UrlRewriteFactory;
-use SoftCommerce\UrlRewriteGenerator\Model\ImportExport\FileSystem\Pool;
+use SoftCommerce\Core\Logger\LogProcessorInterface;
+use SoftCommerce\Core\Model\Source\StatusInterface;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\FileSystem;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\FileSystem\Pool;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Report;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\ValidatorPool;
 
 /**
  * @inheritDoc
  */
-class Import implements ImportInterface
+class UrlRewriteImport implements UrlRewriteImportInterface
 {
-    const XXX = 'web/url/use_store';
     /**
      * @var array
      */
@@ -43,6 +46,11 @@ class Import implements ImportInterface
      * @var MergeDataProviderFactory
      */
     private MergeDataProviderFactory $mergeUrlDataProviderFactory;
+
+    /**
+     * @var LogProcessorInterface
+     */
+    private LogProcessorInterface $logger;
 
     /**
      * @var UrlFinderInterface
@@ -88,6 +96,7 @@ class Import implements ImportInterface
      * @param Pool $filePool
      * @param Report $report
      * @param MergeDataProviderFactory $mergeUrlDataProviderFactory
+     * @param LogProcessorInterface $logger
      * @param StoreRepositoryInterface $storeRepository
      * @param UrlFinderInterface $urlFinder
      * @param UrlPersistInterface $urlPersist
@@ -98,6 +107,7 @@ class Import implements ImportInterface
         FileSystem\Pool $filePool,
         Report $report,
         MergeDataProviderFactory $mergeUrlDataProviderFactory,
+        LogProcessorInterface $logger,
         StoreRepositoryInterface $storeRepository,
         UrlFinderInterface $urlFinder,
         UrlPersistInterface $urlPersist,
@@ -107,6 +117,7 @@ class Import implements ImportInterface
         $this->filePool = $filePool;
         $this->report = $report;
         $this->mergeUrlDataProviderFactory = $mergeUrlDataProviderFactory;
+        $this->logger = $logger;
         $this->storeRepository = $storeRepository;
         $this->urlFinder = $urlFinder;
         $this->urlPersist = $urlPersist;
@@ -117,11 +128,11 @@ class Import implements ImportInterface
     /**
      * @inheritDoc
      */
-    public function execute(int $operationId, string $filename, int $offset, int $size): void
+    public function execute(int $operationId, string $filename, int $rowsOffset): void
     {
         $this->errors = [];
         $file = $this->filePool->get($filename);
-        $rows = $file->getRows($offset, $size);
+        $rows = $file->getRows($rowsOffset, self::PROCESS_ROW_BATCH);
 
         if (isset($rows[0][self::COLUMN_NO_REQUEST_PATH])
             && $rows[0][self::COLUMN_NO_REQUEST_PATH] === UrlRewrite::REQUEST_PATH) {
@@ -146,9 +157,16 @@ class Import implements ImportInterface
         }
 
         if ($this->errors) {
-            $this->report->save($operationId, $this->errors);
-            throw new LocalizedException(__('Import processed with errors.'));
+            $this->logger->execute(StatusInterface::ERROR, $this->errors);
         }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getErrors(): array
+    {
+        return $this->errors;
     }
 
     /**

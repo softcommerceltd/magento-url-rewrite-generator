@@ -15,8 +15,8 @@ use Magento\Framework\App\Response\Http\FileFactory;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
 use Psr\Log\LoggerInterface;
-use SoftCommerce\UrlRewriteGenerator\Model\ImportExport;
-use SoftCommerce\UrlRewriteGenerator\Model\ImportExport\FileSystem\Directory;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\FileSystem\Directory;
 
 /**
  * @inheritDoc
@@ -36,7 +36,7 @@ class Report extends Action
     /**
      * @var Directory
      */
-    private ImportExport\FileSystem\Directory $directory;
+    private UrlRewriteImport\FileSystem\Directory $directory;
 
     /**
      * @var LoggerInterface
@@ -50,10 +50,10 @@ class Report extends Action
      * @param Context $context
      */
     public function __construct(
-        FileFactory $responseFileFactory,
-        ImportExport\FileSystem\Directory $directory,
-        LoggerInterface $logger,
-        Context $context
+        FileFactory                           $responseFileFactory,
+        UrlRewriteImport\FileSystem\Directory $directory,
+        LoggerInterface                       $logger,
+        Context                               $context
     ) {
         $this->directory = $directory;
         $this->responseFileFactory = $responseFileFactory;
@@ -69,12 +69,12 @@ class Report extends Action
         $resultRedirect = $this->resultRedirectFactory->create();
         $operationId = (int) $this->getRequest()->getParam('operation');
 
-        $fileName = sprintf(ImportExport\Report::REPORT_FILENAME_TEMPLATE, $operationId);
+        $fileName = sprintf(UrlRewriteImport\Report::REPORT_FILENAME_TEMPLATE, $operationId);
         if (!$this->directory->isFileExist($fileName)) {
             $this->messageManager->addErrorMessage(
                 __('Report file for operation %1 does not exist', $operationId)
             );
-            return $resultRedirect->setPath('softcommerce/url_rewrite/import/');
+            return $resultRedirect->setPath('adminhtml/url_rewrite/index/');
         }
 
         try {
@@ -88,6 +88,6 @@ class Report extends Action
             $this->messageManager->addErrorMessage($e->getMessage());
         }
 
-        return $resultRedirect->setPath('softcommerce/url_rewrite/import/');
+        return $resultRedirect->setPath('adminhtml/url_rewrite/index/');
     }
 }

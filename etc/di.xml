@@ -28,8 +28,8 @@
         </arguments>
     </type>
     <!-- Import/Export -->
-    <preference for="SoftCommerce\UrlRewriteGenerator\Model\ImportExport\ImportInterface" type="SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Import" />
-    <type name="SoftCommerce\UrlRewriteGenerator\Model\ImportExport\FileSystem\Uploader">
+    <preference for="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImportInterface" type="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport" />
+    <type name="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\FileSystem\Uploader">
         <arguments>
             <argument name="allowedExtensions" xsi:type="array">
                 <item name="csv" xsi:type="string">csv</item>
@@ -39,18 +39,18 @@
     <type name="Magento\Framework\MessageQueue\MergerFactory">
         <arguments>
             <argument name="mergers" xsi:type="array">
-                <item name="url.rewrite.import.processor" xsi:type="string">SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Mq\Merger</item>
+                <item name="url.rewrite.import.processor" xsi:type="string">SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Mq\Merger</item>
             </argument>
         </arguments>
     </type>
-    <type name="SoftCommerce\UrlRewriteGenerator\Model\ImportExport\ValidatorPool">
+    <type name="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\ValidatorPool">
         <arguments>
             <argument name="validators" xsi:type="array">
                 <item name="import" xsi:type="array">
-                    <item name="request_path" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Validator\RequestPath</item>
-                    <item name="target_path" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Validator\TargetPath</item>
-                    <item name="redirect_type" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Validator\RedirectType</item>
-                    <item name="store_id" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Validator\StoreId</item>
+                    <item name="request_path" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Validator\RequestPath</item>
+                    <item name="target_path" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Validator\TargetPath</item>
+                    <item name="redirect_type" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Validator\RedirectType</item>
+                    <item name="store_id" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Validator\StoreId</item>
                 </item>
             </argument>
         </arguments>
@@ -63,7 +63,7 @@
     </virtualType>
     <virtualType name="SoftCommerce\UrlRewriteGenerator\VirtualRotationStreamHandler" type="SoftCommerce\Core\Logger\Handler\RotationSteamHandler">
         <arguments>
-            <argument name="fileName" xsi:type="string">var/log/url-rewrite-generator.log</argument>
+            <argument name="fileName" xsi:type="string">var/log/url-rewrites.log</argument>
         </arguments>
     </virtualType>
     <virtualType name="SoftCommerce\UrlRewriteGenerator\VirtualLogger" type="SoftCommerce\Core\Logger\LogProcessor">
@@ -79,6 +79,16 @@
         <arguments>
             <argument name="logger" xsi:type="object">SoftCommerce\UrlRewriteGenerator\VirtualLogger</argument>
             <argument name="urlRewrite" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\ProductUrlRewrite</argument>
+        </arguments>
+    </type>
+    <type name="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport">
+        <arguments>
+            <argument name="logger" xsi:type="object">SoftCommerce\UrlRewriteGenerator\VirtualLogger</argument>
+        </arguments>
+    </type>
+    <type name="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Mq\Consumer">
+        <arguments>
+            <argument name="logger" xsi:type="object">SoftCommerce\UrlRewriteGenerator\VirtualLogger</argument>
         </arguments>
     </type>
 </config>

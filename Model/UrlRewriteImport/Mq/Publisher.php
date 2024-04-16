@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Mq;
+namespace SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Mq;
 
 use Magento\AsynchronousOperations\Api\Data\OperationInterfaceFactory;
 use Magento\Authorization\Model\UserContextInterface;
@@ -15,9 +15,8 @@ use Magento\Framework\Bulk\OperationInterface;
 use Magento\Framework\DataObject\IdentityGeneratorInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Serialize\SerializerInterface;
-use Magento\UrlRewrite\Service\V1\Data\UrlRewrite;
-use SoftCommerce\UrlRewriteGenerator\Model\ImportExport\FileSystem\Pool;
-use SoftCommerce\UrlRewriteGenerator\Model\ImportExport\ImportInterface;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\FileSystem\Pool;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImportInterface;
 
 /**
  * Class Publisher
@@ -60,23 +59,23 @@ class Publisher
      * @param IdentityGeneratorInterface $identityService
      * @param OperationInterfaceFactory $operationFactory
      * @param Pool $filePool
-     * @param UserContextInterface $userContextInterface
      * @param SerializerInterface $serializer
+     * @param UserContextInterface $userContextInterface
      */
     public function __construct(
         BulkManagementInterface $bulkManagement,
         IdentityGeneratorInterface $identityService,
         OperationInterfaceFactory $operationFactory,
         Pool $filePool,
-        UserContextInterface $userContextInterface,
-        SerializerInterface $serializer
+        SerializerInterface $serializer,
+        UserContextInterface $userContextInterface
     ) {
         $this->bulkManagement = $bulkManagement;
         $this->identityService = $identityService;
         $this->operationFactory = $operationFactory;
         $this->filePool = $filePool;
-        $this->userContext = $userContextInterface;
         $this->serializer = $serializer;
+        $this->userContext = $userContextInterface;
     }
 
     /**
@@ -92,24 +91,23 @@ class Publisher
             return;
         }
 
-        $rows = ceil($count / ImportInterface::PROCESS_ROW_BATCH);
-        $uUid = $this->identityService->generateId();
+        $operationCount = ceil($count / UrlRewriteImportInterface::PROCESS_ROW_BATCH);
+        $bulkUuid = $this->identityService->generateId();
         $request = [];
 
-        while ($rows > 0) {
-            $rows--;
-            $offset = $rows * ImportInterface::PROCESS_ROW_BATCH;
+        while ($operationCount > 0) {
+            $operationCount--;
+            $rowsOffset = $operationCount * UrlRewriteImportInterface::PROCESS_ROW_BATCH;
 
             $serializedData = [
-                ImportInterface::FILENAME => $filename,
-                ImportInterface::OFFSET => $offset,
-                ImportInterface::SIZE => ImportInterface::PROCESS_ROW_BATCH,
-                UrlRewrite::METADATA => 'The offset of rows: ' . $offset,
+                UrlRewriteImportInterface::ROWS_OFFSET => $rowsOffset,
+                UrlRewriteImportInterface::META_INFORMATION => 'Rows offset: ' . $rowsOffset,
+                UrlRewriteImportInterface::FILENAME => $filename,
             ];
 
             $data = [
                 'data' => [
-                    OperationInterface::BULK_ID => $uUid,
+                    OperationInterface::BULK_ID => $bulkUuid,
                     OperationInterface::TOPIC_NAME => 'url.rewrite.import.processor',
                     OperationInterface::SERIALIZED_DATA => $this->serializer->serialize($serializedData),
                     OperationInterface::STATUS => OperationInterface::STATUS_TYPE_OPEN,
@@ -124,12 +122,11 @@ class Publisher
         }
 
         $result = $this->bulkManagement->scheduleBulk(
-            $uUid,
+            $bulkUuid,
             $request,
-            'Import of URL Rewrites.',
+            __('URL Rewrites Import.'),
             $this->userContext->getUserId()
         );
-
 
         if (!$result) {
             throw new LocalizedException(

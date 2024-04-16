@@ -6,15 +6,15 @@
 
 declare(strict_types=1);
 
-namespace SoftCommerce\UrlRewriteGenerator\Model\ImportExport;
+namespace SoftCommerce\UrlRewriteGenerator\Model;
 
 use Magento\Framework\Exception\LocalizedException;
 
 /**
- * Interface ImportInterface
+ * Interface UrlRewriteImportInterface
  * used to import URL Rewrites
  */
-interface ImportInterface
+interface UrlRewriteImportInterface
 {
     /**
      * CSV PROCESS ROW LIMIT
@@ -26,8 +26,11 @@ interface ImportInterface
      * GLOBAL ATTRIBUTES
      */
     public const FILENAME = 'filename';
-    public const OFFSET = 'offset';
-    public const SIZE = 'size';
+    public const OPERATION_KEY = 'operation_key';
+    public const ROWS_OFFSET = 'rows_offset';
+    public const ENTITY_ID = 'entity_id';
+    public const ENTITY_LINK = 'entity_link';
+    public const META_INFORMATION = 'meta_information';
 
     /**
      * CSV ROW NO FIELDS
@@ -44,10 +47,14 @@ interface ImportInterface
     /**
      * @param int $operationId
      * @param string $filename
-     * @param int $offset
-     * @param int $size
+     * @param int $rowsOffset
      * @return void
      * @throws LocalizedException
      */
-    public function execute(int $operationId, string $filename, int $offset, int $size): void;
+    public function execute(int $operationId, string $filename, int $rowsOffset): void;
+
+    /**
+     * @return array
+     */
+    public function getErrors(): array;
 }

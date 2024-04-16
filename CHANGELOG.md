@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.2.1
+- **Enhancement**: Add report for asynchronous bulk operations [#8]
+
 ### Version 1.2.0
 - **Feature** New functionality to import URL rewrites from CSV file [#7]
 

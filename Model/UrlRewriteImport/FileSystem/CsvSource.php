@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace SoftCommerce\UrlRewriteGenerator\Model\ImportExport\FileSystem;
+namespace SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\FileSystem;
 
 use SplFileObject;
 
@@ -42,15 +42,15 @@ class CsvSource
     }
 
     /**
-     * @param int $offset
+     * @param int $rowsOffset
      * @param int $length
      * @return array
      */
-    public function getRows(int $offset, int $length = 100): array
+    public function getRows(int $rowsOffset, int $length = 100): array
     {
         $rows = [];
         $i = 1;
-        $this->splFileObject->seek($offset);
+        $this->splFileObject->seek($rowsOffset);
 
         do {
             $rows[$this->splFileObject->key()] = $this->splFileObject->current();

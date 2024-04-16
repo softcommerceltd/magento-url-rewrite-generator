@@ -6,12 +6,12 @@
 
 declare(strict_types=1);
 
-namespace SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Validator;
+namespace SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Validator;
 
 use Magento\Framework\Validator\AbstractValidator;
 use Magento\UrlRewrite\Service\V1\Data\UrlRewrite;
 use SoftCommerce\Core\Model\Store\WebsiteStorageInterface;
-use SoftCommerce\UrlRewriteGenerator\Model\ImportExport\ImportInterface;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImportInterface;
 
 /**
  * @inheritDoc
@@ -39,13 +39,13 @@ class StoreId extends AbstractValidator
     {
         $this->_clearMessages();
 
-        if (empty($value[ImportInterface::COLUMN_NO_STORE_CODE])) {
+        if (empty($value[UrlRewriteImportInterface::COLUMN_NO_STORE_CODE])) {
             $this->_addMessages([
                 __('Missing value for column: "%1"', UrlRewrite::REDIRECT_TYPE)
             ]);
             return false;
         }
 
-        return !!$this->websiteStorage->getStoreCodeToId($value[ImportInterface::COLUMN_NO_STORE_CODE]);
+        return !!$this->websiteStorage->getStoreCodeToId($value[UrlRewriteImportInterface::COLUMN_NO_STORE_CODE]);
     }
 }

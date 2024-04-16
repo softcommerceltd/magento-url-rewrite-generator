@@ -6,11 +6,11 @@
 
 declare(strict_types=1);
 
-namespace SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Validator;
+namespace SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Validator;
 
 use Magento\Framework\Validator\AbstractValidator;
 use Magento\UrlRewrite\Service\V1\Data\UrlRewrite;
-use SoftCommerce\UrlRewriteGenerator\Model\ImportExport\ImportInterface;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImportInterface;
 
 /**
  * @inheritDoc
@@ -24,7 +24,7 @@ class TargetPath extends AbstractValidator
     {
         $this->_clearMessages();
 
-        if (empty($value[ImportInterface::COLUMN_NO_TARGET_PATH])) {
+        if (empty($value[UrlRewriteImportInterface::COLUMN_NO_TARGET_PATH])) {
             $this->_addMessages([
                 __('Missing value for column: "%1"', UrlRewrite::TARGET_PATH)
             ]);

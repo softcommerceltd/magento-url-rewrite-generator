@@ -7,6 +7,6 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Communication/etc/communication.xsd">
     <topic name="url.rewrite.import.processor" request="Magento\AsynchronousOperations\Api\Data\OperationInterface">
-        <handler name="url.rewrite.import.processor.handler" type="SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Mq\Consumer" method="execute" />
+        <handler name="url.rewrite.import.processor.handler" type="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Mq\Consumer" method="execute" />
     </topic>
 </config>

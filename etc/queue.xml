@@ -7,6 +7,6 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework-message-queue:etc/queue.xsd">
     <broker topic="url.rewrite.import.processor" exchange="magento-db" type="db">
-        <queue name="url.rewrite.import.processor" consumer="url.rewrite.import.processor" consumerInstance="Magento\Framework\MessageQueue\BatchConsumer" handler="SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Mq\Consumer::execute" />
+        <queue name="url.rewrite.import.processor" consumer="url.rewrite.import.processor" consumerInstance="Magento\Framework\MessageQueue\BatchConsumer" handler="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Mq\Consumer::execute" />
     </broker>
 </config>

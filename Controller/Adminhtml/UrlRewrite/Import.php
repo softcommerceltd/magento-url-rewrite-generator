@@ -16,7 +16,7 @@ use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
-use SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Mq\Publisher;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Mq\Publisher;
 
 /**
  * @inheritDoc

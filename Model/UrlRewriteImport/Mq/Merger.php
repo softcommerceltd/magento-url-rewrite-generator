@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace SoftCommerce\UrlRewriteGenerator\Model\ImportExport\Mq;
+namespace SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Mq;
 
 use Magento\AsynchronousOperations\Api\Data\OperationListInterfaceFactory;
 use Magento\Framework\MessageQueue\MergedMessageInterfaceFactory;

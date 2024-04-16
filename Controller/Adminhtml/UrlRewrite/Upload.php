@@ -14,7 +14,7 @@ use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
 use Psr\Log\LoggerInterface;
-use SoftCommerce\UrlRewriteGenerator\Model\ImportExport\FileSystem\UploaderFactory;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\FileSystem\UploaderFactory;
 
 /**
  * @inheritDoc

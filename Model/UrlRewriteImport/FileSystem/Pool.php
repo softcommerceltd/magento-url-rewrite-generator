@@ -6,7 +6,7 @@
 
 declare(strict_types=1);
 
-namespace SoftCommerce\UrlRewriteGenerator\Model\ImportExport\FileSystem;
+namespace SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\FileSystem;
 
 use Magento\Framework\Exception\LocalizedException;
 use SplFileObject;

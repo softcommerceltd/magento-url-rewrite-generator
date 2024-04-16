@@ -12,7 +12,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use SoftCommerce\Core\Logger\LogProcessorInterface;
-use SoftCommerce\Core\Model\Source\Status;
+use SoftCommerce\Core\Model\Source\StatusInterface;
 use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteInterface;
 
 /**
@@ -78,7 +78,7 @@ class ProductUrlGenerator
                 $this->urlRewrite->execute($batchEntityIds);
                 if ($result = $this->urlRewrite->getResponseStorage()->getData()) {
                     $this->logger->execute(
-                        Status::SUCCESS,
+                        StatusInterface::SUCCESS,
                         [
                            sprintf('Generated URL IDs: %s', implode(',', $result))
                         ]
@@ -86,7 +86,7 @@ class ProductUrlGenerator
                 }
             } catch (\Exception $e) {
                 $this->logger->execute(
-                    Status::ERROR,
+                    StatusInterface::ERROR,
                     [
                         $e->getMessage()
                     ]
