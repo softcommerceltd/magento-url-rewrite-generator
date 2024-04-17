@@ -50,10 +50,10 @@ class Report extends Action
      * @param Context $context
      */
     public function __construct(
-        FileFactory                           $responseFileFactory,
+        FileFactory $responseFileFactory,
         UrlRewriteImport\FileSystem\Directory $directory,
-        LoggerInterface                       $logger,
-        Context                               $context
+        LoggerInterface $logger,
+        Context $context
     ) {
         $this->directory = $directory;
         $this->responseFileFactory = $responseFileFactory;

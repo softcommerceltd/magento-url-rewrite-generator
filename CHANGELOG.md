@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.2.3
+- **Enhancement**: Add custom URL persist storage interface [#10]
+
 ### Version 1.2.2
 - **Enhancement**: Allow fully qualified domain names in the `request_path` and `target_path` fields for URL rewrite import. [#9]
 

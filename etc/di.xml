@@ -27,7 +27,7 @@
             <argument name="urlRewrite" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\ProductUrlRewrite</argument>
         </arguments>
     </type>
-    <!-- Import/Export -->
+    <!-- URL Rewrite Import -->
     <preference for="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImportInterface" type="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport" />
     <type name="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\FileSystem\Uploader">
         <arguments>
@@ -55,6 +55,7 @@
             </argument>
         </arguments>
     </type>
+
     <!-- Logger -->
     <virtualType name="SoftCommerce\UrlRewriteGenerator\VirtualStreamHandler" type="Magento\Framework\Logger\Handler\Base">
         <arguments>
@@ -84,6 +85,7 @@
     <type name="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport">
         <arguments>
             <argument name="logger" xsi:type="object">SoftCommerce\UrlRewriteGenerator\VirtualLogger</argument>
+            <argument name="urlPersist" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\Storage\UrlRewriteDbStorage</argument>
         </arguments>
     </type>
     <type name="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Mq\Consumer">

@@ -146,9 +146,9 @@ class UrlRewriteImport implements UrlRewriteImportInterface
             }
         }
 
-        if ($request) {
+        foreach (array_chunk($request, self::PROCESS_PAYLOAD_BATCH) as $payload) {
             try {
-                $this->importUrlRewriteRequest($request);
+                $this->importUrlRewriteRequest($payload);
             } catch (\Exception $e) {
                 $this->errors[] = [
                     self::COLUMN_NO_MESSAGES => $e->getMessage()
@@ -315,7 +315,7 @@ class UrlRewriteImport implements UrlRewriteImportInterface
         );
 
         if ($path !== '') {
-            return $path;
+            return rtrim($path, '/');
         }
 
         $path = '../';
