@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.2.2
+- **Enhancement**: Allow fully qualified domain names in the `request_path` and `target_path` fields for URL rewrite import. [#9]
+
 ### Version 1.2.1
 - **Enhancement**: Add report for asynchronous bulk operations [#8]
 

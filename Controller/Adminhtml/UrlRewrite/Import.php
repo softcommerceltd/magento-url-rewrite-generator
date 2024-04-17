@@ -54,7 +54,7 @@ class Import extends Action implements HttpPostActionInterface
         try {
             $this->processImport();
             $resultJson->setData([
-                'message' => __('Import operation has been published...'),
+                'message' => __('URL rewrite import operation has been published...'),
                 'error' => false
             ]);
         } catch (\Exception $e) {

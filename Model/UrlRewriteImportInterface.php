@@ -45,6 +45,12 @@ interface UrlRewriteImportInterface
     public const COLUMN_MESSAGES = 'messages';
 
     /**
+     * Error Messages
+     */
+    public const ERROR_MSG_DELIMITER = '; ';
+    public const ERROR_MSG_MISSING_COLUMN_VALUE = 'Missing value for column: "%1"';
+
+    /**
      * @param int $operationId
      * @param string $filename
      * @param int $rowsOffset
