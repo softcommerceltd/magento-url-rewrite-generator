@@ -15,10 +15,8 @@ use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\CatalogImportExport\Model\Import\Proxy\ProductFactory;
 use Magento\CatalogUrlRewrite\Model\ProductUrlPathGenerator;
-use Magento\CatalogUrlRewrite\Model\ProductUrlRewriteGenerator;
+use Magento\CatalogUrlRewrite\Model\ProductUrlRewriteGenerator as CatalogProductUrlRewriteGenerator;
 use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\UrlRewrite\Model\Exception\UrlAlreadyExistsException;
@@ -34,15 +32,12 @@ use SoftCommerce\Core\Framework\MessageStorageInterface;
 use SoftCommerce\Core\Framework\MessageStorageInterfaceFactory;
 use SoftCommerce\Core\Model\Source\StatusInterface;
 use SoftCommerce\Core\Model\Utils\GetEntityMetadataInterface;
-use SoftCommerce\Core\Model\Store\WebsiteStorageInterface;
-use function array_map;
-use function explode;
 use function implode;
 
 /**
  * @inheritDoc
  */
-class ProductUrlRewrite implements UrlRewriteInterface
+class ProductUrlRewriteGenerator implements UrlRewriteInterface
 {
     /**
      * @var DataStorageInterface
@@ -60,14 +55,14 @@ class ProductUrlRewrite implements UrlRewriteInterface
     private CategoryRepositoryInterface $categoryRepository;
 
     /**
-     * @var AdapterInterface
-     */
-    private AdapterInterface $connection;
-
-    /**
      * @var GetEntityMetadataInterface
      */
     private GetEntityMetadataInterface $getEntityMetadata;
+
+    /**
+     * @var GetProductEntityDataInterface
+     */
+    private GetProductEntityDataInterface $getProductEntityData;
 
     /**
      * @var ProductFactory
@@ -110,11 +105,6 @@ class ProductUrlRewrite implements UrlRewriteInterface
     private UrlRewriteFactory $urlRewriteFactory;
 
     /**
-     * @var WebsiteStorageInterface
-     */
-    private WebsiteStorageInterface $websiteStorage;
-
-    /**
      * @var array
      */
     private array $request = [];
@@ -123,9 +113,9 @@ class ProductUrlRewrite implements UrlRewriteInterface
      * @param CategoryRepositoryInterface $categoryRepository
      * @param DataStorageInterfaceFactory $dataStorageFactory
      * @param GetEntityMetadataInterface $getEntityMetadata
+     * @param GetProductEntityDataInterface $getProductEntityData
      * @param MergeDataProviderFactory $mergeDataProviderFactory
      * @param MessageStorageInterfaceFactory $messageStorageFactory
-     * @param ResourceConnection $resourceConnection
      * @param ProductFactory $productFactory
      * @param ProductResource $productResource
      * @param ProductUrlPathGenerator $productUrlPathGenerator
@@ -133,29 +123,27 @@ class ProductUrlRewrite implements UrlRewriteInterface
      * @param UrlFinderInterface $urlFinder
      * @param UrlRewriteFactory $urlRewriteFactory
      * @param UrlPersistInterface $urlPersist
-     * @param WebsiteStorageInterface $websiteStorage
      */
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
         DataStorageInterfaceFactory $dataStorageFactory,
         GetEntityMetadataInterface $getEntityMetadata,
+        GetProductEntityDataInterface $getProductEntityData,
         MergeDataProviderFactory $mergeDataProviderFactory,
         MessageStorageInterfaceFactory $messageStorageFactory,
-        ResourceConnection $resourceConnection,
         ProductFactory $productFactory,
         ProductResource $productResource,
         ProductUrlPathGenerator $productUrlPathGenerator,
         ScopeConfigInterface $scopeConfig,
         UrlFinderInterface $urlFinder,
         UrlRewriteFactory $urlRewriteFactory,
-        UrlPersistInterface $urlPersist,
-        WebsiteStorageInterface $websiteStorage
+        UrlPersistInterface $urlPersist
     ) {
         $this->categoryRepository = $categoryRepository;
         $this->responseStorage = $dataStorageFactory->create();
         $this->getEntityMetadata = $getEntityMetadata;
+        $this->getProductEntityData = $getProductEntityData;
         $this->mergeUrlDataProviderFactory = $mergeDataProviderFactory;
-        $this->connection = $resourceConnection->getConnection();
         $this->messageStorage = $messageStorageFactory->create();
         $this->productFactory = $productFactory;
         $this->productResource = $productResource;
@@ -164,7 +152,6 @@ class ProductUrlRewrite implements UrlRewriteInterface
         $this->urlFinder = $urlFinder;
         $this->urlRewriteFactory = $urlRewriteFactory;
         $this->urlPersist = $urlPersist;
-        $this->websiteStorage = $websiteStorage;
     }
 
     /**
@@ -189,13 +176,19 @@ class ProductUrlRewrite implements UrlRewriteInterface
      */
     public function execute(array $entityIds): void
     {
-        if (empty($entityIds)) {
+        if (!$entityIds) {
             return;
         }
 
         $this->initialize();
 
-        foreach ($this->getData($entityIds) as $item) {
+        if (array_column($entityIds, 'sku')) {
+            $items = $entityIds;
+        } else {
+            $items = $this->getProductEntityData->execute($entityIds);
+        }
+
+        foreach ($items as $item) {
             $productId = (int) ($item[$this->getEntityMetadata->getLinkField()] ?? null);
             if (!$productId || !$storeIds = $item['store_id'] ?? []) {
                 continue;
@@ -295,7 +288,7 @@ class ProductUrlRewrite implements UrlRewriteInterface
             }
 
             $result[$product->getStoreId()] = $this->urlRewriteFactory->create()
-                ->setEntityType(ProductUrlRewriteGenerator::ENTITY_TYPE)
+                ->setEntityType(CatalogProductUrlRewriteGenerator::ENTITY_TYPE)
                 ->setEntityId($product->getEntityId())
                 ->setRequestPath($this->productUrlPathGenerator->getUrlPathWithSuffix($product, $product->getStoreId()))
                 ->setTargetPath($this->productUrlPathGenerator->getCanonicalUrlPath($product))
@@ -354,7 +347,7 @@ class ProductUrlRewrite implements UrlRewriteInterface
         $requestPath = $this->productUrlPathGenerator->getUrlPathWithSuffix($product, $storeId, $category);
         $targetPath = $this->productUrlPathGenerator->getCanonicalUrlPath($product, $category);
         return $this->urlRewriteFactory->create()
-            ->setEntityType(ProductUrlRewriteGenerator::ENTITY_TYPE)
+            ->setEntityType(CatalogProductUrlRewriteGenerator::ENTITY_TYPE)
             ->setEntityId($product->getId())
             ->setRequestPath($requestPath)
             ->setTargetPath($targetPath)
@@ -374,7 +367,7 @@ class ProductUrlRewrite implements UrlRewriteInterface
             [
                 UrlRewrite::STORE_ID => $storeIds,
                 UrlRewrite::ENTITY_ID => $productId,
-                UrlRewrite::ENTITY_TYPE => ProductUrlRewriteGenerator::ENTITY_TYPE,
+                UrlRewrite::ENTITY_TYPE => CatalogProductUrlRewriteGenerator::ENTITY_TYPE,
             ]
         );
 
@@ -423,7 +416,7 @@ class ProductUrlRewrite implements UrlRewriteInterface
         }
 
         return $this->urlRewriteFactory->create()
-            ->setEntityType(ProductUrlRewriteGenerator::ENTITY_TYPE)
+            ->setEntityType(CatalogProductUrlRewriteGenerator::ENTITY_TYPE)
             ->setEntityId($productId)
             ->setRequestPath($urlRewrite->getRequestPath())
             ->setTargetPath($targetPath)
@@ -432,65 +425,6 @@ class ProductUrlRewrite implements UrlRewriteInterface
             ->setDescription($urlRewrite->getDescription())
             ->setIsAutogenerated(0)
             ->setMetadata($urlRewrite->getMetadata());
-    }
-
-    /**
-     * @param array $productIds
-     * @return array
-     * @throws \Exception
-     */
-    private function getData(array $productIds): array
-    {
-        if (!$productIds) {
-            return [];
-        }
-
-        $linkField = $this->getEntityMetadata->getLinkField();
-        $columns = ['cpe.entity_id', 'cpe.' . ProductInterface::SKU];
-        if ($linkField !== $this->getEntityMetadata->getIdentifierField()) {
-            $columns[] = "cpe.$linkField";
-        }
-
-        $select = $this->connection->select()
-            ->from(
-                ['cpe' => $this->connection->getTableName('catalog_product_entity')],
-                $columns
-            )
-            ->joinLeft(
-                ['ea' => $this->connection->getTableName('eav_attribute')],
-                'ea.attribute_code = \'visibility\'',
-                null
-            )
-            ->joinLeft(
-                ['ccp' => $this->connection->getTableName('catalog_category_product')],
-                'cpe.entity_id = ccp.product_id',
-                [
-                    'category_id' => new \Zend_Db_Expr('GROUP_CONCAT(DISTINCT ccp.category_id)')
-                ]
-            )
-            ->joinLeft(
-                ['cpw' => $this->connection->getTableName('catalog_product_website')],
-                'cpe.entity_id = cpw.product_id',
-                [
-                    'website_id' => new \Zend_Db_Expr('GROUP_CONCAT(DISTINCT cpw.website_id)')
-                ]
-            )->group(
-                'cpe.entity_id'
-            )
-            ->where("cpe.$linkField IN (?)", $productIds);
-
-        $websiteIdToStoreIds = $this->websiteStorage->getWebsiteIdToStoreIds();
-        return array_map(function ($item) use ($websiteIdToStoreIds) {
-            $storeIds = [];
-            foreach (explode(',', $item['website_id'] ?? '') as $websiteId) {
-                if (isset($websiteIdToStoreIds[$websiteId])) {
-                    $storeIds += $websiteIdToStoreIds[$websiteId];
-                }
-            }
-            $item['store_id'] = $storeIds;
-            $item['category_id'] = isset($item['category_id']) ? explode(',', $item['category_id']) : [];
-            return $item;
-        }, $this->connection->fetchAll($select));
     }
 
     /**

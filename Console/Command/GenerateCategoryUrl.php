@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace SoftCommerce\UrlRewriteGenerator\Console\Command;
 
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -20,7 +21,7 @@ class GenerateCategoryUrl extends AbstractGenerator
     /**
      * @inheritDoc
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName(self::COMMAND_NAME)
             ->setDescription('Generates URL rewrites for Category entity.')
@@ -38,11 +39,17 @@ class GenerateCategoryUrl extends AbstractGenerator
     /**
      * @inheritDoc
      */
-    protected function getAllIds(): array
+    protected function getAllIds(InputInterface $input): array
     {
-        $select = $this->connection->select()
-            ->from($this->connection->getTableName('catalog_category_entity'), 'entity_id')
-            ->where('parent_id > ?', 1);
-        return array_map('intval', $this->connection->fetchCol($select));
+        if ($idFilter = $input->getOption(self::ID_FILTER)) {
+            $entityIds = explode(',', str_replace(' ', '', $idFilter));
+        } else {
+            $select = $this->connection->select()
+                ->from($this->connection->getTableName('catalog_category_entity'), 'entity_id')
+                ->where('parent_id > ?', 1);
+            $entityIds = $this->connection->fetchCol($select);
+        }
+
+        return array_map('intval', $entityIds);
     }
 }

@@ -63,15 +63,9 @@ abstract class AbstractGenerator extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if ($idFilter = $input->getOption(self::ID_FILTER)) {
-            $entityIds = explode(',', str_replace(' ', '', $idFilter));
-        } else {
-            $entityIds = $this->getAllIds();
-        }
-
-        foreach (array_chunk($entityIds, self::ARRAY_CHUNK_SIZE) as $batchEntityIds) {
+        foreach (array_chunk($this->getAllIds($input), self::ARRAY_CHUNK_SIZE) as $payload) {
             try {
-                $this->urlRewrite->execute($batchEntityIds);
+                $this->urlRewrite->execute($payload);
                 if ($result = $this->urlRewrite->getResponseStorage()->getData()) {
                     $output->writeln(
                         sprintf(
@@ -91,7 +85,8 @@ abstract class AbstractGenerator extends Command
     }
 
     /**
+     * @param InputInterface $input
      * @return array
      */
-    abstract protected function getAllIds(): array;
+    abstract protected function getAllIds(InputInterface $input): array;
 }

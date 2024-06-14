@@ -11,7 +11,7 @@ namespace SoftCommerce\UrlRewriteGenerator\Model;
 use Magento\Catalog\Api\CategoryRepositoryInterface;
 use Magento\Catalog\Api\Data\CategoryInterface;
 use Magento\Catalog\Model\Category;
-use Magento\CatalogUrlRewrite\Model\CategoryUrlRewriteGenerator;
+use Magento\CatalogUrlRewrite\Model\CategoryUrlRewriteGenerator as CatalogCategoryUrlRewriteGenerator;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Store\Model\Store;
 use Magento\UrlRewrite\Model\Exception\UrlAlreadyExistsException;
@@ -27,7 +27,7 @@ use function implode;
 /**
  * @inheritDoc
  */
-class CategoryUrlRewrite implements UrlRewriteInterface
+class CategoryUrlRewriteGenerator implements UrlRewriteInterface
 {
     /**
      * @var DataStorageInterface
@@ -45,9 +45,9 @@ class CategoryUrlRewrite implements UrlRewriteInterface
     private CategoryRepositoryInterface $categoryRepository;
 
     /**
-     * @var CategoryUrlRewriteGenerator
+     * @var CatalogCategoryUrlRewriteGenerator
      */
-    private CategoryUrlRewriteGenerator $categoryUrlRewriteGenerator;
+    private CatalogCategoryUrlRewriteGenerator $categoryUrlRewriteGenerator;
 
     /**
      * @var MergeDataProviderFactory
@@ -66,7 +66,7 @@ class CategoryUrlRewrite implements UrlRewriteInterface
 
     /**
      * @param CategoryRepositoryInterface $categoryRepository
-     * @param CategoryUrlRewriteGenerator $categoryUrlRewriteGenerator
+     * @param CatalogCategoryUrlRewriteGenerator $categoryUrlRewriteGenerator
      * @param DataStorageInterfaceFactory $dataStorageFactory
      * @param MergeDataProviderFactory $mergeDataProviderFactory
      * @param MessageStorageInterfaceFactory $messageStorageFactory
@@ -74,7 +74,7 @@ class CategoryUrlRewrite implements UrlRewriteInterface
      */
     public function __construct(
         CategoryRepositoryInterface $categoryRepository,
-        CategoryUrlRewriteGenerator $categoryUrlRewriteGenerator,
+        CatalogCategoryUrlRewriteGenerator $categoryUrlRewriteGenerator,
         DataStorageInterfaceFactory $dataStorageFactory,
         MergeDataProviderFactory $mergeDataProviderFactory,
         MessageStorageInterfaceFactory $messageStorageFactory,

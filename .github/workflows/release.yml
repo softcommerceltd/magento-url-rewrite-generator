@@ -12,8 +12,10 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v2
         with:
-          name: 1.2.3 [CE|EE|ECE 2.4.0-2.4.7] 17 Apr 2024
-          tag_name: 1.2.3
-          body: "Add custom URL persist storage interface [#10]"
+          name: 1.2.4 [CE|EE|ECE 2.4.0-2.4.7] 14 Jun 2024
+          tag_name: 1.2.4
+          body: |-
+            ### softcommerce/module-url-rewrite-generator [1.2.4]
+            - **Feature**: Add an option to generate product url_key value based on the specified attribute [#11]
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

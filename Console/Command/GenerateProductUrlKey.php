@@ -8,14 +8,13 @@ declare(strict_types=1);
 
 namespace SoftCommerce\UrlRewriteGenerator\Console\Command;
 
-use Magento\Catalog\Model\Product\Visibility;
-use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Console\Cli;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Filter\FilterManager;
-use Magento\Store\Model\ScopeInterface;
 use SoftCommerce\Core\Model\Eav\GetEntityTypeIdInterface;
+use SoftCommerce\Core\Model\Utils\GetEntityMetadataInterface;
+use SoftCommerce\UrlRewriteGenerator\Model\GetProductEntityDataInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -24,10 +23,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @inheritDoc
  */
-class GenerateProductUrlKeyByAttribute extends Command
+class GenerateProductUrlKey extends Command
 {
-    private const COMMAND_NAME = 'url_rewrite:product_url_key:generate';
-    private const ATTRIBUTE_ID_ARG = 'attribute_id';
+    private const COMMAND_NAME = 'url:product_url_key:generate';
     private const ATTRIBUTE_CODE_ARG = 'attribute_code';
     private const PRODUCT_ID_ARG = 'product_id';
 
@@ -47,51 +45,52 @@ class GenerateProductUrlKeyByAttribute extends Command
     private FilterManager $filter;
 
     /**
+     * @var GetEntityMetadataInterface
+     */
+    private GetEntityMetadataInterface $getEntityMetadata;
+
+    /**
      * @var GetEntityTypeIdInterface
      */
     private GetEntityTypeIdInterface $getEntityTypeId;
 
     /**
-     * @var ScopeConfigInterface
+     * @var GetProductEntityDataInterface
      */
-    private ScopeConfigInterface $scopeConfig;
+    private GetProductEntityDataInterface $getProductEntityData;
 
     /**
      * @param FilterManager $filter
+     * @param GetEntityMetadataInterface $getEntityMetadata
      * @param GetEntityTypeIdInterface $getEntityTypeId
+     * @param GetProductEntityDataInterface $getProductEntityData
      * @param ResourceConnection $resourceConnection
-     * @param ScopeConfigInterface $scopeConfig
      * @param string|null $name
      */
     public function __construct(
         FilterManager $filter,
+        GetEntityMetadataInterface $getEntityMetadata,
         GetEntityTypeIdInterface $getEntityTypeId,
+        GetProductEntityDataInterface $getProductEntityData,
         ResourceConnection $resourceConnection,
-        ScopeConfigInterface $scopeConfig,
         string $name = null
     ) {
         $this->filter = $filter;
+        $this->getEntityMetadata = $getEntityMetadata;
         $this->getEntityTypeId = $getEntityTypeId;
+        $this->getProductEntityData = $getProductEntityData;
         $this->connection = $resourceConnection->getConnection();
-        $this->scopeConfig = $scopeConfig;
-
         parent::__construct($name);
     }
 
     /**
      * @inheritDoc
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName(self::COMMAND_NAME)
             ->setDescription('Generates product url_key attribute value.')
             ->setDefinition([
-                new InputOption(
-                    self::ATTRIBUTE_ID_ARG,
-                    '-a',
-                    InputOption::VALUE_REQUIRED,
-                    'Attribute entity ID argument'
-                ),
                 new InputOption(
                     self::ATTRIBUTE_CODE_ARG,
                     '-c',
@@ -115,38 +114,51 @@ class GenerateProductUrlKeyByAttribute extends Command
     {
         $attributeCode = $input->getOption(self::ATTRIBUTE_CODE_ARG);
         if (!$attributeCode) {
-            $output->writeln("<error>Please provide attribute ID or code.</error>");
+            $output->writeln("<error>Please provide attribute code.</error>");
             return Cli::RETURN_FAILURE;
         }
 
         if ($productIdArg = $input->getOption(self::PRODUCT_ID_ARG)) {
             $productIds = explode(',', str_replace(' ', '', $productIdArg));
         } else {
-            $productIds = $this->getAllIds();
+            $productIds = [];
         }
 
         $attributeData = $this->getAttributeData($attributeCode);
 
-        foreach ($productIds as $productId) {
-            try {
-                $result = $this->process((int) $productId, $attributeData);
-                if ($result) {
-                    $output->writeln(
-                        sprintf(
-                            '<info>A URL key for the product with <comment>ID: %s</comment> has been generated.</info>',
-                            $productId
-                        )
-                    );
-                } else {
-                    $output->writeln(
-                        sprintf(
-                            '<comment>Nothing to generate for the product with <info>ID: %s</info>.</comment>',
-                            $productId
-                        )
-                    );
+        foreach ($this->getProductEntityData->execute($productIds) as $item) {
+            $productId = (int) ($item[$this->getEntityMetadata->getLinkField()] ?? null);
+            if (!$productId || !$storeIds = $item['store_id'] ?? []) {
+                continue;
+            }
+
+            if (!isset($storeIds[0])) {
+                $storeIds[0] = 0;
+            }
+
+            foreach ($storeIds as $storeId) {
+                try {
+                    $result = $this->process((int) $productId, $storeId, $attributeData);
+                    if ($result) {
+                        $output->writeln(
+                            sprintf(
+                                '<info>URL has been generated <comment>[Product: %s, Store: %s]</comment></info>',
+                                $productId,
+                                $storeId
+                            )
+                        );
+                    } else {
+                        $output->writeln(
+                            sprintf(
+                                '<comment>Nothing to generate <info>[Product: %s, Store: %s]</info></comment>',
+                                $productId,
+                                $storeId
+                            )
+                        );
+                    }
+                } catch (\Exception $e) {
+                    $output->writeln("<error>{$e->getMessage()}</error>");
                 }
-            } catch (\Exception $e) {
-                $output->writeln("<error>{$e->getMessage()}</error>");
             }
         }
 
@@ -155,37 +167,37 @@ class GenerateProductUrlKeyByAttribute extends Command
 
     /**
      * @param int $productId
+     * @param int $storeId
      * @param array $attributeData
      * @return int
      */
-    private function process(int $productId, array $attributeData): int
+    private function process(int $productId, int $storeId, array $attributeData): int
     {
-        $attributeId = key($attributeData);
+        $attributeId = array_key_first($attributeData);
         $attributeTypeId = current($attributeData);
+        $urlKeyAttribute = $this->getAttributeData('url_key');
 
-        $urlKeyAttributeData = $this->getAttributeData('url_key');
-        $urlKeyAttributeId = key($urlKeyAttributeData);
-        $urlKeyAttributeTypeId = current($urlKeyAttributeData);
-
-        if (!$urlKeyAttributeId
-            || !$attributeValue = $this->getAttributeValue($productId, $attributeId, $attributeTypeId)
+        if (!$urlKeyAttribute
+            || !$attributeValue = $this->getAttributeValue($productId, $attributeId, $storeId, $attributeTypeId)
         ) {
             return 0;
         }
 
-        $existingAttributeValue = $this->getAttributeValue($productId, $urlKeyAttributeId, $urlKeyAttributeTypeId);
+        $urlKeyAttributeId = array_key_first($urlKeyAttribute);
+        $urlKeyAttributeTypeId = current($urlKeyAttribute);
 
-        $urlKey = $this->filter->translitUrl($attributeValue);
+        $existingUrlKey = $this->getAttributeValue($productId, $urlKeyAttributeId, $storeId, $urlKeyAttributeTypeId);
+        $requestUrlKey = $this->filter->translitUrl($attributeValue);
 
-        if ($urlKey === $existingAttributeValue) {
+        if ($requestUrlKey === $existingUrlKey) {
             return 1;
         }
 
         $request = [
             'attribute_id' => $urlKeyAttributeId,
-            'store_id' => 0,
+            'store_id' => $storeId,
             'entity_id' => $productId,
-            'value' => $urlKey
+            'value' => $requestUrlKey
         ];
 
         return (int) $this->connection->insertOnDuplicate(
@@ -216,57 +228,20 @@ class GenerateProductUrlKeyByAttribute extends Command
     /**
      * @param int $productId
      * @param int $attributeId
+     * @param int $storeId
      * @param string $attributeTypeId
      * @return string|null
      */
-    private function getAttributeValue(int $productId, int $attributeId, string $attributeTypeId): ?string
+    private function getAttributeValue(int $productId, int $attributeId, int $storeId, string $attributeTypeId): ?string
     {
+        $linkField = $this->getEntityMetadata->getLinkField();
+
         $select = $this->connection->select()
             ->from($this->connection->getTableName("catalog_product_entity_$attributeTypeId"), 'value')
             ->where('attribute_id = ?', $attributeId)
-            ->where('entity_id = ?', $productId)
-            ->where('store_id = ?', 0);
+            ->where("$linkField = ?", $productId)
+            ->where('store_id = ?', $storeId);
 
-        return $this->connection->fetchOne($select);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    private function getAllIds(): array
-    {
-        $select = $this->connection->select()
-            ->from(
-                ['cpe' => $this->connection->getTableName('catalog_product_entity')],
-                'cpe.entity_id'
-            )
-            ->joinLeft(
-                ['ea' => $this->connection->getTableName('eav_attribute')],
-                'ea.attribute_code = \'visibility\'',
-                null
-            )
-            ->joinLeft(
-                ['cpei' => $this->connection->getTableName('catalog_product_entity_int')],
-                'cpe.entity_id  = cpei.entity_id' .
-                ' AND ea.attribute_id = cpei.attribute_id AND cpei.store_id = 0',
-                null
-            )
-            ->order('entity_id DESC');
-
-        if (!$this->scopeConfig->isSetFlag(
-            'url_rewrite_generator/product_entity_config/include_invisible_product',
-            ScopeInterface::SCOPE_WEBSITE
-        )) {
-            $select->where(
-                'cpei.value IN (?)',
-                [
-                    Visibility::VISIBILITY_BOTH,
-                    Visibility::VISIBILITY_IN_CATALOG,
-                    Visibility::VISIBILITY_IN_SEARCH
-                ]
-            );
-        }
-
-        return array_map('intval', $this->connection->fetchCol($select));
+        return $this->connection->fetchOne($select) ?: null;
     }
 }

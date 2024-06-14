@@ -8,8 +8,11 @@ declare(strict_types=1);
 
 namespace SoftCommerce\UrlRewriteGenerator\Console\Command;
 
-use Magento\Catalog\Model\Product\Visibility;
-use Magento\Store\Model\ScopeInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\ResourceConnection;
+use SoftCommerce\UrlRewriteGenerator\Model\GetProductEntityDataInterface;
+use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteInterface;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 
 /**
@@ -17,12 +20,35 @@ use Symfony\Component\Console\Input\InputOption;
  */
 class GenerateProductUrl extends AbstractGenerator
 {
-    private const COMMAND_NAME = 'url_rewrite:generate:product';
+    private const COMMAND_NAME = 'url:generate:product';
+
+    /**
+     * @var GetProductEntityDataInterface
+     */
+    private GetProductEntityDataInterface $getProductEntityData;
+
+    /**
+     * @param GetProductEntityDataInterface $getProductEntityData
+     * @param ResourceConnection $resourceConnection
+     * @param ScopeConfigInterface $scopeConfig
+     * @param UrlRewriteInterface $urlRewrite
+     * @param string|null $name
+     */
+    public function __construct(
+        GetProductEntityDataInterface $getProductEntityData,
+        ResourceConnection $resourceConnection,
+        ScopeConfigInterface $scopeConfig,
+        UrlRewriteInterface $urlRewrite,
+        string $name = null
+    ) {
+        $this->getProductEntityData = $getProductEntityData;
+        parent::__construct($resourceConnection, $scopeConfig, $urlRewrite, $name);
+    }
 
     /**
      * @inheritDoc
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName(self::COMMAND_NAME)
             ->setDescription('Generates URL rewrites for Product entity.')
@@ -38,42 +64,18 @@ class GenerateProductUrl extends AbstractGenerator
     }
 
     /**
-     * @inheritDoc
+     * @param InputInterface $input
+     * @return array
+     * @throws \Exception
      */
-    protected function getAllIds(): array
+    protected function getAllIds(InputInterface $input): array
     {
-        $select = $this->connection->select()
-            ->from(
-                ['cpe' => $this->connection->getTableName('catalog_product_entity')],
-                'cpe.entity_id'
-            )
-            ->joinLeft(
-                ['ea' => $this->connection->getTableName('eav_attribute')],
-                'ea.attribute_code = \'visibility\'',
-                null
-            )
-            ->joinLeft(
-                ['cpei' => $this->connection->getTableName('catalog_product_entity_int')],
-                'cpe.entity_id  = cpei.entity_id' .
-                ' AND ea.attribute_id = cpei.attribute_id AND cpei.store_id = 0',
-                null
-            )
-            ->order('entity_id DESC');
-
-        if (!$this->scopeConfig->isSetFlag(
-            'url_rewrite_generator/product_entity_config/include_invisible_product',
-            ScopeInterface::SCOPE_WEBSITE
-        )) {
-            $select->where(
-                'cpei.value IN (?)',
-                [
-                    Visibility::VISIBILITY_BOTH,
-                    Visibility::VISIBILITY_IN_CATALOG,
-                    Visibility::VISIBILITY_IN_SEARCH
-                ]
-            );
+        if ($idFilter = $input->getOption(self::ID_FILTER)) {
+            $entityIds = explode(',', str_replace(' ', '', $idFilter));
+        } else {
+            $entityIds = [];
         }
 
-        return array_map('intval', $this->connection->fetchCol($select));
+        return $this->getProductEntityData->execute($entityIds);
     }
 }

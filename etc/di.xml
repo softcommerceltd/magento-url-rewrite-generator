@@ -6,6 +6,8 @@
  */
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Global interfaces -->
+    <preference for="SoftCommerce\UrlRewriteGenerator\Model\GetProductEntityDataInterface" type="SoftCommerce\UrlRewriteGenerator\Model\GetProductEntityData" />
     <!-- CLI -->
     <type name="Magento\Framework\Console\CommandListInterface">
         <arguments>
@@ -13,18 +15,18 @@
                 <item name="url_rewrite_delete" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Console\Command\DeleteUrlRewrite</item>
                 <item name="url_rewrite_generate_category" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Console\Command\GenerateCategoryUrl</item>
                 <item name="url_rewrite_generate__product" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Console\Command\GenerateProductUrl</item>
-                <item name="url_rewrite_generate_product_url_key" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Console\Command\GenerateProductUrlKeyByAttribute</item>
+                <item name="url_rewrite_generate_product_url_key" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Console\Command\GenerateProductUrlKey</item>
             </argument>
         </arguments>
     </type>
     <type name="SoftCommerce\UrlRewriteGenerator\Console\Command\GenerateCategoryUrl">
         <arguments>
-            <argument name="urlRewrite" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\CategoryUrlRewrite</argument>
+            <argument name="urlRewrite" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\CategoryUrlRewriteGenerator</argument>
         </arguments>
     </type>
     <type name="SoftCommerce\UrlRewriteGenerator\Console\Command\GenerateProductUrl">
         <arguments>
-            <argument name="urlRewrite" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\ProductUrlRewrite</argument>
+            <argument name="urlRewrite" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\ProductUrlRewriteGenerator</argument>
         </arguments>
     </type>
     <!-- URL Rewrite Import -->
@@ -55,7 +57,6 @@
             </argument>
         </arguments>
     </type>
-
     <!-- Logger -->
     <virtualType name="SoftCommerce\UrlRewriteGenerator\VirtualStreamHandler" type="Magento\Framework\Logger\Handler\Base">
         <arguments>
@@ -79,7 +80,7 @@
     <type name="SoftCommerce\UrlRewriteGenerator\Cron\Backend\ProductUrlGenerator">
         <arguments>
             <argument name="logger" xsi:type="object">SoftCommerce\UrlRewriteGenerator\VirtualLogger</argument>
-            <argument name="urlRewrite" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\ProductUrlRewrite</argument>
+            <argument name="urlRewrite" xsi:type="object">SoftCommerce\UrlRewriteGenerator\Model\ProductUrlRewriteGenerator</argument>
         </arguments>
     </type>
     <type name="SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport">
