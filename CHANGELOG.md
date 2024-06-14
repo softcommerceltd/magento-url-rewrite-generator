@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.2.4
+- **Feature**: Add an option to generate product url_key value based on the specified attribute [#11]
+
 ### Version 1.2.3
 - **Enhancement**: Add custom URL persist storage interface [#10]
 

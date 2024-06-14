@@ -113,20 +113,9 @@ class GenerateProductUrlKeyByAttribute extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $attributeId = $input->getOption(self::ATTRIBUTE_ID_ARG);
         $attributeCode = $input->getOption(self::ATTRIBUTE_CODE_ARG);
-
-        if (!$attributeId || !$attributeCode) {
+        if (!$attributeCode) {
             $output->writeln("<error>Please provide attribute ID or code.</error>");
-            return Cli::RETURN_FAILURE;
-        }
-
-        if (!$attributeId && $attributeCode = $input->getOption(self::ATTRIBUTE_CODE_ARG)) {
-            $attributeId = $this->getAttributeIdByCode($attributeCode);
-        }
-
-        if (!$attributeId) {
-            $output->writeln('<error>Could not retrieve attribute.</error>');
             return Cli::RETURN_FAILURE;
         }
 
@@ -136,11 +125,11 @@ class GenerateProductUrlKeyByAttribute extends Command
             $productIds = $this->getAllIds();
         }
 
-        $attributeData = $this->getAttributeData((int) $attributeId);
+        $attributeData = $this->getAttributeData($attributeCode);
 
         foreach ($productIds as $productId) {
             try {
-                $result = $this->process($productId, $attributeData);
+                $result = $this->process((int) $productId, $attributeData);
                 if ($result) {
                     $output->writeln(
                         sprintf(
@@ -207,21 +196,15 @@ class GenerateProductUrlKeyByAttribute extends Command
     }
 
     /**
-     * @param int|string $attributeCodeOrId
+     * @param string $attributeCodeOrId
      * @return array
      */
-    private function getAttributeData(int|string $attributeCodeOrId): array
+    private function getAttributeData(string $attributeCodeOrId): array
     {
         if (!isset($this->dataInMemory[$attributeCodeOrId])) {
-            if (is_numeric($attributeCodeOrId)) {
-                $entityType = 'id';
-            } else {
-                $entityType = 'code';
-            }
-
             $select = $this->connection->select()
                 ->from($this->connection->getTableName('eav_attribute'), ['attribute_id', 'backend_type'])
-                ->where("attribute_{$entityType} = ?", $attributeCodeOrId)
+                ->where("attribute_code = ?", $attributeCodeOrId)
                 ->where('entity_type_id = ?', $this->getEntityTypeId->execute());
 
             $this->dataInMemory[$attributeCodeOrId] = $this->connection->fetchPairs($select);
