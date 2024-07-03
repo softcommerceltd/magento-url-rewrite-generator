@@ -28,6 +28,7 @@ class GenerateProductUrlKey extends Command
     private const COMMAND_NAME = 'url:product_url_key:generate';
     private const ATTRIBUTE_CODE_ARG = 'attribute_code';
     private const PRODUCT_ID_ARG = 'product_id';
+    private const STORE_ID_ARG = 'store_id';
 
     /**
      * @var AdapterInterface
@@ -102,6 +103,12 @@ class GenerateProductUrlKey extends Command
                     '-i',
                     InputOption::VALUE_REQUIRED,
                     'Product entity ID argument'
+                ),
+                new InputOption(
+                    self::STORE_ID_ARG,
+                    '-s',
+                    InputOption::VALUE_REQUIRED,
+                    'Store ID argument'
                 )
             ]);
         parent::configure();
@@ -114,14 +121,18 @@ class GenerateProductUrlKey extends Command
     {
         $attributeCode = $input->getOption(self::ATTRIBUTE_CODE_ARG);
         if (!$attributeCode) {
-            $output->writeln("<error>Please provide attribute code.</error>");
-            return Cli::RETURN_FAILURE;
+            $attributeCode = 'name';
         }
 
         if ($productIdArg = $input->getOption(self::PRODUCT_ID_ARG)) {
             $productIds = explode(',', str_replace(' ', '', $productIdArg));
         } else {
             $productIds = [];
+        }
+
+        $storeId = $input->getOption(self::STORE_ID_ARG);
+        if (null !== $storeId) {
+            $storeId = (int) $storeId;
         }
 
         $attributeData = $this->getAttributeData($attributeCode);
@@ -132,8 +143,8 @@ class GenerateProductUrlKey extends Command
                 continue;
             }
 
-            if (!isset($storeIds[0])) {
-                $storeIds[0] = 0;
+            if (null !== $storeId) {
+                $storeIds = [$storeId];
             }
 
             foreach ($storeIds as $storeId) {

@@ -29,7 +29,8 @@ interface UrlRewriteInterface
 
     /**
      * @param array $entityIds
+     * @param int|null $storeId
      * @return void
      */
-    public function execute(array $entityIds): void;
+    public function execute(array $entityIds, ?int $storeId = null): void;
 }

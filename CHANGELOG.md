@@ -1,5 +1,8 @@
 ## Changelog
 
+### Version 1.2.5
+- **Feature**: Add an option to generate product url_key value by store scope [#12]
+
 ### Version 1.2.4
 - **Feature**: Add an option to generate product url_key value based on the specified attribute [#11]
 

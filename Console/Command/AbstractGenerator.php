@@ -23,6 +23,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class AbstractGenerator extends Command
 {
     protected const ID_FILTER = 'id';
+    protected const STORE_ID_ARG = 'store_id';
     private const ARRAY_CHUNK_SIZE = 20;
 
     /**
@@ -63,18 +64,26 @@ abstract class AbstractGenerator extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        foreach (array_chunk($this->getAllIds($input), self::ARRAY_CHUNK_SIZE) as $payload) {
+        $storeId = $input->getOption(self::STORE_ID_ARG);
+        if (null !== $storeId) {
+            $storeId = (int) $storeId;
+        }
+
+        foreach (array_chunk($this->getAllIds($input, $storeId), self::ARRAY_CHUNK_SIZE) as $payload) {
             try {
-                $this->urlRewrite->execute($payload);
-                if ($result = $this->urlRewrite->getResponseStorage()->getData()) {
+                $this->urlRewrite->execute($payload, $storeId);
+                $result = $this->urlRewrite->getResponseStorage()->getData();
+
+                if ($result) {
                     $output->writeln(
                         sprintf(
-                            '<info>URL rewrites have been generated. </info><comment>Effected IDs: %s</comment>',
-                            implode(',', $result)
+                            '<info>URLs have been generated <comment>[IDs: %s, Store: %s]</comment></info>',
+                            implode(',', $result),
+                            $storeId
                         )
                     );
                 } else {
-                    $output->writeln('<comment>No URL rewrites have been generated.</comment>');
+                    $output->writeln('<comment>Nothing to generate</comment>');
                 }
             } catch (\Exception $e) {
                 $output->writeln("<error>{$e->getMessage()}</error>");
@@ -86,7 +95,8 @@ abstract class AbstractGenerator extends Command
 
     /**
      * @param InputInterface $input
+     * @param int|null $storeId
      * @return array
      */
-    abstract protected function getAllIds(InputInterface $input): array;
+    abstract protected function getAllIds(InputInterface $input, ?int $storeId = null): array;
 }

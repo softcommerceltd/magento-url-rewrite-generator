@@ -105,10 +105,9 @@ class CategoryUrlRewriteGenerator implements UrlRewriteInterface
     }
 
     /**
-     * @param array $entityIds
-     * @return void
+     * @inheritDoc
      */
-    public function execute(array $entityIds): void
+    public function execute(array $entityIds, ?int $storeId = null): void
     {
         if (empty($entityIds)) {
             return;

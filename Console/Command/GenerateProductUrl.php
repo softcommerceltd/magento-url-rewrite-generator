@@ -58,17 +58,22 @@ class GenerateProductUrl extends AbstractGenerator
                     '-i',
                     InputOption::VALUE_REQUIRED,
                     'Product entity ID filter'
+                ),
+                new InputOption(
+                    self::STORE_ID_ARG,
+                    '-s',
+                    InputOption::VALUE_REQUIRED,
+                    'Store ID argument'
                 )
             ]);
         parent::configure();
     }
 
     /**
-     * @param InputInterface $input
-     * @return array
+     * @inheritDoc
      * @throws \Exception
      */
-    protected function getAllIds(InputInterface $input): array
+    protected function getAllIds(InputInterface $input, ?int $storeId = null): array
     {
         if ($idFilter = $input->getOption(self::ID_FILTER)) {
             $entityIds = explode(',', str_replace(' ', '', $idFilter));
@@ -76,6 +81,6 @@ class GenerateProductUrl extends AbstractGenerator
             $entityIds = [];
         }
 
-        return $this->getProductEntityData->execute($entityIds);
+        return $this->getProductEntityData->execute($entityIds, $storeId);
     }
 }

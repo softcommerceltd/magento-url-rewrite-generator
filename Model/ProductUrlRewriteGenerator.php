@@ -174,7 +174,7 @@ class ProductUrlRewriteGenerator implements UrlRewriteInterface
      * @inheritDoc
      * @throws \Exception
      */
-    public function execute(array $entityIds): void
+    public function execute(array $entityIds, ?int $storeId = null): void
     {
         if (!$entityIds) {
             return;
@@ -195,6 +195,10 @@ class ProductUrlRewriteGenerator implements UrlRewriteInterface
             }
 
             $categoryIds = $item['category_id'] ?? [];
+
+            if (null !== $storeId) {
+                $storeIds = [$storeId];
+            }
 
             try {
                 $this->generate($productId, $storeIds, $categoryIds);

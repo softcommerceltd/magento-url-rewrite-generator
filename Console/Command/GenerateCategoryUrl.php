@@ -39,7 +39,7 @@ class GenerateCategoryUrl extends AbstractGenerator
     /**
      * @inheritDoc
      */
-    protected function getAllIds(InputInterface $input): array
+    protected function getAllIds(InputInterface $input, ?int $storeId = null): array
     {
         if ($idFilter = $input->getOption(self::ID_FILTER)) {
             $entityIds = explode(',', str_replace(' ', '', $idFilter));

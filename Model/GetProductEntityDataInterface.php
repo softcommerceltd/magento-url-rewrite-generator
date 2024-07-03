@@ -16,8 +16,9 @@ interface GetProductEntityDataInterface
 {
     /**
      * @param array $productIds
+     * @param int|null $storeId
      * @return array
      * @throws \Exception
      */
-    public function execute(array $productIds = []): array;
+    public function execute(array $productIds = [], ?int $storeId = null): array;
 }

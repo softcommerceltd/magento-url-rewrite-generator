@@ -63,7 +63,7 @@ class GetProductEntityData implements GetProductEntityDataInterface
     /**
      * @inheritDoc
      */
-    public function execute(array $productIds = []): array
+    public function execute(array $productIds = [], ?int $storeId = null): array
     {
         $linkField = $this->getEntityMetadata->getLinkField();
         $columns = ['cpe.entity_id', 'cpe.' . ProductInterface::SKU];
@@ -120,14 +120,30 @@ class GetProductEntityData implements GetProductEntityDataInterface
             )->order('entity_id DESC');
         }
 
+        if (null !== $storeId) {
+            if ($storeId === 0) {
+                $websiteId = $this->websiteStorage->getDefaultWebsiteId();
+            } else {
+                $websiteId = $this->websiteStorage->getStoreIdToWebsiteId($storeId);
+            }
+            if ($websiteId) {
+                $select->where('cpw.website_id = ?', $websiteId);
+            }
+        }
+
         $websiteIdToStoreIds = $this->websiteStorage->getWebsiteIdToStoreIds();
-        return array_map(function ($item) use ($websiteIdToStoreIds) {
-            $storeIds = [];
-            foreach (explode(',', $item['website_id'] ?? '') as $websiteId) {
-                if (isset($websiteIdToStoreIds[$websiteId])) {
-                    $storeIds += $websiteIdToStoreIds[$websiteId];
+        return array_map(function ($item) use ($websiteIdToStoreIds, $storeId) {
+            if (null !== $storeId) {
+                $storeIds = [$storeId];
+            } else {
+                $storeIds = [];
+                foreach (explode(',', $item['website_id'] ?? '') as $websiteId) {
+                    if (isset($websiteIdToStoreIds[$websiteId])) {
+                        $storeIds += $websiteIdToStoreIds[$websiteId];
+                    }
                 }
             }
+
             $item['store_id'] = $storeIds;
             $item['category_id'] = isset($item['category_id']) ? explode(',', $item['category_id']) : [];
             return $item;
