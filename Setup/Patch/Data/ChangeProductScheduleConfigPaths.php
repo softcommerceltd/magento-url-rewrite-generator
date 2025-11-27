@@ -18,17 +18,10 @@ use Magento\Framework\Setup\Patch\DataPatchInterface;
 class ChangeProductScheduleConfigPaths implements DataPatchInterface
 {
     /**
-     * @var ModuleDataSetupInterface
-     */
-    private ModuleDataSetupInterface $moduleDataSetup;
-
-    /**
      * @param ModuleDataSetupInterface $moduleDataSetup
      */
-    public function __construct(ModuleDataSetupInterface $moduleDataSetup)
-    {
-        $this->moduleDataSetup = $moduleDataSetup;
-    }
+    public function __construct(private ModuleDataSetupInterface $moduleDataSetup)
+    {}
 
     /**
      * @inheritDoc

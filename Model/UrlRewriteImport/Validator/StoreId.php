@@ -19,17 +19,10 @@ use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImportInterface;
 class StoreId extends AbstractValidator
 {
     /**
-     * @var WebsiteStorageInterface
-     */
-    private WebsiteStorageInterface $websiteStorage;
-
-    /**
      * @param WebsiteStorageInterface $websiteStorage
      */
-    public function __construct(WebsiteStorageInterface $websiteStorage)
-    {
-        $this->websiteStorage = $websiteStorage;
-    }
+    public function __construct(private WebsiteStorageInterface $websiteStorage)
+    {}
 
     /**
      * @param $value

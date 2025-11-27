@@ -10,9 +10,9 @@ namespace SoftCommerce\UrlRewriteGenerator\Console\Command;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Console\Cli;
-use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\Filter\FilterManager;
 use SoftCommerce\Core\Model\Eav\GetEntityTypeIdInterface;
+use SoftCommerce\Core\Model\Trait\ConnectionTrait;
 use SoftCommerce\Core\Model\Utils\GetEntityMetadataInterface;
 use SoftCommerce\UrlRewriteGenerator\Model\GetProductEntityDataInterface;
 use Symfony\Component\Console\Command\Command;
@@ -25,40 +25,17 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class GenerateProductUrlKey extends Command
 {
+    use ConnectionTrait;
+
     private const COMMAND_NAME = 'url:product_url_key:generate';
     private const ATTRIBUTE_CODE_ARG = 'attribute_code';
     private const PRODUCT_ID_ARG = 'product_id';
     private const STORE_ID_ARG = 'store_id';
 
     /**
-     * @var AdapterInterface
-     */
-    protected AdapterInterface $connection;
-
-    /**
      * @var array
      */
     private array $dataInMemory = [];
-
-    /**
-     * @var FilterManager
-     */
-    private FilterManager $filter;
-
-    /**
-     * @var GetEntityMetadataInterface
-     */
-    private GetEntityMetadataInterface $getEntityMetadata;
-
-    /**
-     * @var GetEntityTypeIdInterface
-     */
-    private GetEntityTypeIdInterface $getEntityTypeId;
-
-    /**
-     * @var GetProductEntityDataInterface
-     */
-    private GetProductEntityDataInterface $getProductEntityData;
 
     /**
      * @param FilterManager $filter
@@ -69,18 +46,13 @@ class GenerateProductUrlKey extends Command
      * @param string|null $name
      */
     public function __construct(
-        FilterManager $filter,
-        GetEntityMetadataInterface $getEntityMetadata,
-        GetEntityTypeIdInterface $getEntityTypeId,
-        GetProductEntityDataInterface $getProductEntityData,
-        ResourceConnection $resourceConnection,
-        string $name = null
+        private FilterManager $filter,
+        private GetEntityMetadataInterface $getEntityMetadata,
+        private GetEntityTypeIdInterface $getEntityTypeId,
+        private GetProductEntityDataInterface $getProductEntityData,
+        private ResourceConnection $resourceConnection,
+        ?string $name = null
     ) {
-        $this->filter = $filter;
-        $this->getEntityMetadata = $getEntityMetadata;
-        $this->getEntityTypeId = $getEntityTypeId;
-        $this->getProductEntityData = $getProductEntityData;
-        $this->connection = $resourceConnection->getConnection();
         parent::__construct($name);
     }
 
@@ -211,8 +183,8 @@ class GenerateProductUrlKey extends Command
             'value' => $requestUrlKey
         ];
 
-        return (int) $this->connection->insertOnDuplicate(
-            $this->connection->getTableName("catalog_product_entity_$urlKeyAttributeTypeId"),
+        return (int) $this->getConnection()->insertOnDuplicate(
+            $this->getConnection()->getTableName("catalog_product_entity_$urlKeyAttributeTypeId"),
             $request,
             ['value']
         );
@@ -225,12 +197,12 @@ class GenerateProductUrlKey extends Command
     private function getAttributeData(string $attributeCodeOrId): array
     {
         if (!isset($this->dataInMemory[$attributeCodeOrId])) {
-            $select = $this->connection->select()
-                ->from($this->connection->getTableName('eav_attribute'), ['attribute_id', 'backend_type'])
+            $select = $this->getConnection()->select()
+                ->from($this->getConnection()->getTableName('eav_attribute'), ['attribute_id', 'backend_type'])
                 ->where("attribute_code = ?", $attributeCodeOrId)
                 ->where('entity_type_id = ?', $this->getEntityTypeId->execute());
 
-            $this->dataInMemory[$attributeCodeOrId] = $this->connection->fetchPairs($select);
+            $this->dataInMemory[$attributeCodeOrId] = $this->getConnection()->fetchPairs($select);
         }
 
         return $this->dataInMemory[$attributeCodeOrId];
@@ -247,12 +219,12 @@ class GenerateProductUrlKey extends Command
     {
         $linkField = $this->getEntityMetadata->getLinkField();
 
-        $select = $this->connection->select()
-            ->from($this->connection->getTableName("catalog_product_entity_$attributeTypeId"), 'value')
+        $select = $this->getConnection()->select()
+            ->from($this->getConnection()->getTableName("catalog_product_entity_$attributeTypeId"), 'value')
             ->where('attribute_id = ?', $attributeId)
             ->where("$linkField = ?", $productId)
             ->where('store_id = ?', $storeId);
 
-        return $this->connection->fetchOne($select) ?: null;
+        return $this->getConnection()->fetchOne($select) ?: null;
     }
 }

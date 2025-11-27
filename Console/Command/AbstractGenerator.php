@@ -12,6 +12,7 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Console\Cli;
 use Magento\Framework\DB\Adapter\AdapterInterface;
+use SoftCommerce\Core\Model\Trait\ConnectionTrait;
 use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,24 +23,11 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class AbstractGenerator extends Command
 {
+    use ConnectionTrait;
+
     protected const ID_FILTER = 'id';
     protected const STORE_ID_ARG = 'store_id';
     private const ARRAY_CHUNK_SIZE = 20;
-
-    /**
-     * @var AdapterInterface
-     */
-    protected AdapterInterface $connection;
-
-    /**
-     * @var ScopeConfigInterface
-     */
-    protected ScopeConfigInterface $scopeConfig;
-
-    /**
-     * @var UrlRewriteInterface
-     */
-    protected UrlRewriteInterface $urlRewrite;
 
     /**
      * @param ResourceConnection $resourceConnection
@@ -48,14 +36,11 @@ abstract class AbstractGenerator extends Command
      * @param string|null $name
      */
     public function __construct(
-        ResourceConnection $resourceConnection,
-        ScopeConfigInterface $scopeConfig,
-        UrlRewriteInterface $urlRewrite,
-        string $name = null
+        protected ResourceConnection $resourceConnection,
+        protected ScopeConfigInterface $scopeConfig,
+        protected UrlRewriteInterface $urlRewrite,
+        ?string $name = null
     ) {
-        $this->connection = $resourceConnection->getConnection();
-        $this->scopeConfig = $scopeConfig;
-        $this->urlRewrite = $urlRewrite;
         parent::__construct($name);
     }
 

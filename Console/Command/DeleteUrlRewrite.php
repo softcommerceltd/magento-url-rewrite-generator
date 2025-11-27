@@ -10,7 +10,7 @@ namespace SoftCommerce\UrlRewriteGenerator\Console\Command;
 
 use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Console\Cli;
-use Magento\Framework\DB\Adapter\AdapterInterface;
+use SoftCommerce\Core\Model\Trait\ConnectionTrait;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,24 +21,20 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class DeleteUrlRewrite extends Command
 {
+    use ConnectionTrait;
+
     private const COMMAND_NAME = 'url_rewrite:delete';
     private const ENTITY_FILTER = 'entity';
     private const STORE_FILTER = 'store';
-
-    /**
-     * @var AdapterInterface
-     */
-    private AdapterInterface $connection;
 
     /**
      * @param ResourceConnection $resourceConnection
      * @param string|null $name
      */
     public function __construct(
-        ResourceConnection $resourceConnection,
-        string $name = null
+        private ResourceConnection $resourceConnection,
+        ?string $name = null
     ) {
-        $this->connection = $resourceConnection->getConnection();
         parent::__construct($name);
     }
 
@@ -115,8 +111,8 @@ class DeleteUrlRewrite extends Command
             $condition['store_id IN (?)'] = $store;
         }
 
-        return (int) $this->connection->delete(
-            $this->connection->getTableName('url_rewrite'),
+        return (int) $this->getConnection()->delete(
+            $this->getConnection()->getTableName('url_rewrite'),
             $condition
         );
     }

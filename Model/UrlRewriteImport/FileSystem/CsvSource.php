@@ -17,16 +17,10 @@ use SplFileObject;
 class CsvSource
 {
     /**
-     * @var SplFileObject
-     */
-    private SplFileObject $splFileObject;
-
-    /**
      * @param SplFileObject $splFileObject
      */
-    public function __construct(SplFileObject $splFileObject)
+    public function __construct(private SplFileObject $splFileObject)
     {
-        $this->splFileObject = $splFileObject;
         $this->splFileObject->setFlags(SplFileObject::READ_CSV);
     }
 

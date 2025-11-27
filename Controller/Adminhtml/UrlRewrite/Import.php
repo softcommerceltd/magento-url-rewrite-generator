@@ -24,19 +24,13 @@ use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\Mq\Publisher;
 class Import extends Action implements HttpPostActionInterface
 {
     /**
-     * @var Publisher
-     */
-    private Publisher $publisher;
-
-    /**
      * @param Publisher $publisher
      * @param Context $context
      */
     public function __construct(
-        Publisher $publisher,
+        private Publisher $publisher,
         Context $context
     ) {
-        $this->publisher = $publisher;
         parent::__construct($context);
     }
 

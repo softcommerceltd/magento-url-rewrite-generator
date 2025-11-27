@@ -27,27 +27,15 @@ class Upload extends Action
     public const ADMIN_RESOURCE = 'Magento_UrlRewrite::urlrewrite';
 
     /**
-     * @var UploaderFactory
-     */
-    private UploaderFactory $fileUploaderFactory;
-
-    /**
-     * @var LoggerInterface
-     */
-    private LoggerInterface $logger;
-
-    /**
      * @param UploaderFactory $fileUploaderFactory
      * @param LoggerInterface $logger
      * @param Context $context
      */
     public function __construct(
-        UploaderFactory $fileUploaderFactory,
-        LoggerInterface $logger,
+        private UploaderFactory $fileUploaderFactory,
+        private LoggerInterface $logger,
         Context $context
     ) {
-        $this->fileUploaderFactory = $fileUploaderFactory;
-        $this->logger = $logger;
         parent::__construct($context);
     }
 

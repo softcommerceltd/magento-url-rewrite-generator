@@ -29,35 +29,17 @@ class Report extends Action
     public const ADMIN_RESOURCE = 'Magento_UrlRewrite::urlrewrite';
 
     /**
-     * @var FileFactory
-     */
-    private FileFactory $responseFileFactory;
-
-    /**
-     * @var Directory
-     */
-    private UrlRewriteImport\FileSystem\Directory $directory;
-
-    /**
-     * @var LoggerInterface
-     */
-    private LoggerInterface $logger;
-
-    /**
      * @param FileFactory $responseFileFactory
      * @param Directory $directory
      * @param LoggerInterface $logger
      * @param Context $context
      */
     public function __construct(
-        FileFactory $responseFileFactory,
-        UrlRewriteImport\FileSystem\Directory $directory,
-        LoggerInterface $logger,
+        private FileFactory $responseFileFactory,
+        private UrlRewriteImport\FileSystem\Directory $directory,
+        private LoggerInterface $logger,
         Context $context
     ) {
-        $this->directory = $directory;
-        $this->responseFileFactory = $responseFileFactory;
-        $this->logger = $logger;
         parent::__construct($context);
     }
 

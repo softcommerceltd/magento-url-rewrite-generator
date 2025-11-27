@@ -21,11 +21,6 @@ class UrlRewriteImportDataProvider extends ModifierPoolDataProvider
     private const KEY_SUBMIT_URL = 'submit_url';
 
     /**
-     * @var UrlInterface
-     */
-    private UrlInterface $urlBuilder;
-
-    /**
      * @param UrlInterface $urlBuilder
      * @param string $name
      * @param string $primaryFieldName
@@ -35,7 +30,7 @@ class UrlRewriteImportDataProvider extends ModifierPoolDataProvider
      * @param PoolInterface|null $pool
      */
     public function __construct(
-        UrlInterface $urlBuilder,
+        private UrlInterface $urlBuilder,
         string $name,
         string $primaryFieldName,
         string $requestFieldName,
@@ -43,7 +38,6 @@ class UrlRewriteImportDataProvider extends ModifierPoolDataProvider
         array $data = [],
         PoolInterface $pool = null
     ) {
-        $this->urlBuilder = $urlBuilder;
         parent::__construct($name, $primaryFieldName, $requestFieldName, $meta, $data, $pool);
     }
 

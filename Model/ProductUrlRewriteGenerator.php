@@ -50,61 +50,6 @@ class ProductUrlRewriteGenerator implements UrlRewriteInterface
     private MessageStorageInterface $messageStorage;
 
     /**
-     * @var CategoryRepositoryInterface
-     */
-    private CategoryRepositoryInterface $categoryRepository;
-
-    /**
-     * @var GetEntityMetadataInterface
-     */
-    private GetEntityMetadataInterface $getEntityMetadata;
-
-    /**
-     * @var GetProductEntityDataInterface
-     */
-    private GetProductEntityDataInterface $getProductEntityData;
-
-    /**
-     * @var ProductFactory
-     */
-    private ProductFactory $productFactory;
-
-    /**
-     * @var ProductResource
-     */
-    private ProductResource $productResource;
-
-    /**
-     * @var MergeDataProviderFactory
-     */
-    private MergeDataProviderFactory $mergeUrlDataProviderFactory;
-
-    /**
-     * @var ProductUrlPathGenerator
-     */
-    private ProductUrlPathGenerator $productUrlPathGenerator;
-
-    /**
-     * @var ScopeConfigInterface
-     */
-    private ScopeConfigInterface $scopeConfig;
-
-    /**
-     * @var UrlFinderInterface
-     */
-    private UrlFinderInterface $urlFinder;
-
-    /**
-     * @var UrlPersistInterface
-     */
-    private UrlPersistInterface $urlPersist;
-
-    /**
-     * @var UrlRewriteFactory
-     */
-    private UrlRewriteFactory $urlRewriteFactory;
-
-    /**
      * @var array
      */
     private array $request = [];
@@ -125,33 +70,22 @@ class ProductUrlRewriteGenerator implements UrlRewriteInterface
      * @param UrlPersistInterface $urlPersist
      */
     public function __construct(
-        CategoryRepositoryInterface $categoryRepository,
+        private CategoryRepositoryInterface $categoryRepository,
         DataStorageInterfaceFactory $dataStorageFactory,
-        GetEntityMetadataInterface $getEntityMetadata,
-        GetProductEntityDataInterface $getProductEntityData,
-        MergeDataProviderFactory $mergeDataProviderFactory,
+        private GetEntityMetadataInterface $getEntityMetadata,
+        private GetProductEntityDataInterface $getProductEntityData,
+        private MergeDataProviderFactory $mergeUrlDataProviderFactory,
         MessageStorageInterfaceFactory $messageStorageFactory,
-        ProductFactory $productFactory,
-        ProductResource $productResource,
-        ProductUrlPathGenerator $productUrlPathGenerator,
-        ScopeConfigInterface $scopeConfig,
-        UrlFinderInterface $urlFinder,
-        UrlRewriteFactory $urlRewriteFactory,
-        UrlPersistInterface $urlPersist
+        private ProductFactory $productFactory,
+        private ProductResource $productResource,
+        private ProductUrlPathGenerator $productUrlPathGenerator,
+        private ScopeConfigInterface $scopeConfig,
+        private UrlFinderInterface $urlFinder,
+        private UrlRewriteFactory $urlRewriteFactory,
+        private UrlPersistInterface $urlPersist
     ) {
-        $this->categoryRepository = $categoryRepository;
         $this->responseStorage = $dataStorageFactory->create();
-        $this->getEntityMetadata = $getEntityMetadata;
-        $this->getProductEntityData = $getProductEntityData;
-        $this->mergeUrlDataProviderFactory = $mergeDataProviderFactory;
         $this->messageStorage = $messageStorageFactory->create();
-        $this->productFactory = $productFactory;
-        $this->productResource = $productResource;
-        $this->productUrlPathGenerator = $productUrlPathGenerator;
-        $this->scopeConfig = $scopeConfig;
-        $this->urlFinder = $urlFinder;
-        $this->urlRewriteFactory = $urlRewriteFactory;
-        $this->urlPersist = $urlPersist;
     }
 
     /**

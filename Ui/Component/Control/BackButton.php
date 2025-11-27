@@ -17,17 +17,10 @@ use Magento\Framework\View\Element\UiComponent\Control\ButtonProviderInterface;
 class BackButton implements ButtonProviderInterface
 {
     /**
-     * @var Context
-     */
-    private Context $context;
-
-    /**
      * @param Context $context
      */
-    public function __construct(Context $context)
-    {
-        $this->context = $context;
-    }
+    public function __construct(private Context $context)
+    {}
 
     /**
      * @inheritDoc

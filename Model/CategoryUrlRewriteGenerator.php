@@ -40,26 +40,6 @@ class CategoryUrlRewriteGenerator implements UrlRewriteInterface
     private MessageStorageInterface $messageStorage;
 
     /**
-     * @var CategoryRepositoryInterface
-     */
-    private CategoryRepositoryInterface $categoryRepository;
-
-    /**
-     * @var CatalogCategoryUrlRewriteGenerator
-     */
-    private CatalogCategoryUrlRewriteGenerator $categoryUrlRewriteGenerator;
-
-    /**
-     * @var MergeDataProviderFactory
-     */
-    private MergeDataProviderFactory $mergeUrlDataProviderFactory;
-
-    /**
-     * @var UrlPersistInterface
-     */
-    private UrlPersistInterface $urlPersist;
-
-    /**
      * @var array
      */
     private array $urlInMemory = [];
@@ -73,19 +53,15 @@ class CategoryUrlRewriteGenerator implements UrlRewriteInterface
      * @param UrlPersistInterface $urlPersist
      */
     public function __construct(
-        CategoryRepositoryInterface $categoryRepository,
-        CatalogCategoryUrlRewriteGenerator $categoryUrlRewriteGenerator,
+        private CategoryRepositoryInterface $categoryRepository,
+        private CatalogCategoryUrlRewriteGenerator $categoryUrlRewriteGenerator,
         DataStorageInterfaceFactory $dataStorageFactory,
-        MergeDataProviderFactory $mergeDataProviderFactory,
+        private MergeDataProviderFactory $mergeUrlDataProviderFactory,
         MessageStorageInterfaceFactory $messageStorageFactory,
-        UrlPersistInterface $urlPersist
+        private UrlPersistInterface $urlPersist
     ) {
-        $this->categoryRepository = $categoryRepository;
-        $this->categoryUrlRewriteGenerator = $categoryUrlRewriteGenerator;
         $this->responseStorage = $dataStorageFactory->create();
-        $this->mergeUrlDataProviderFactory = $mergeDataProviderFactory;
         $this->messageStorage = $messageStorageFactory->create();
-        $this->urlPersist = $urlPersist;
     }
 
     /**

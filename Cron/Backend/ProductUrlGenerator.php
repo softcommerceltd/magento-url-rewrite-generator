@@ -10,9 +10,9 @@ namespace SoftCommerce\UrlRewriteGenerator\Cron\Backend;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\ResourceConnection;
-use Magento\Framework\DB\Adapter\AdapterInterface;
 use SoftCommerce\Core\Logger\LogProcessorInterface;
 use SoftCommerce\Core\Model\Source\StatusInterface;
+use SoftCommerce\Core\Model\Trait\ConnectionTrait;
 use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteInterface;
 
 /**
@@ -21,28 +21,10 @@ use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteInterface;
  */
 class ProductUrlGenerator
 {
+    use ConnectionTrait;
+
     private const XML_PATH_BATCH_SIZE = 'url_rewrite_generator/product_schedule_config/process_batch_size';
     private const XML_PATH_IS_ACTIVE = 'url_rewrite_generator/product_entity_config/enable_schedule';
-
-    /**
-     * @var AdapterInterface
-     */
-    private AdapterInterface $connection;
-
-    /**
-     * @var LogProcessorInterface
-     */
-    private LogProcessorInterface $logger;
-
-    /**
-     * @var UrlRewriteInterface
-     */
-    private UrlRewriteInterface $urlRewrite;
-
-    /**
-     * @var ScopeConfigInterface
-     */
-    private ScopeConfigInterface $scopeConfig;
 
     /**
      * @param LogProcessorInterface $logger
@@ -51,15 +33,11 @@ class ProductUrlGenerator
      * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
-        LogProcessorInterface $logger,
-        ResourceConnection $resourceConnection,
-        UrlRewriteInterface $urlRewrite,
-        ScopeConfigInterface $scopeConfig
+        private LogProcessorInterface $logger,
+        private ResourceConnection $resourceConnection,
+        private UrlRewriteInterface $urlRewrite,
+        private ScopeConfigInterface $scopeConfig
     ) {
-        $this->logger = $logger;
-        $this->connection = $resourceConnection->getConnection();
-        $this->urlRewrite = $urlRewrite;
-        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -100,10 +78,10 @@ class ProductUrlGenerator
      */
     protected function getProductIds(): array
     {
-        $select = $this->connection->select()
-            ->from($this->connection->getTableName('catalog_product_entity'), 'entity_id')
+        $select = $this->getConnection()->select()
+            ->from($this->getConnection()->getTableName('catalog_product_entity'), 'entity_id')
             ->order('entity_id ASC');
 
-        return array_map('intval', $this->connection->fetchCol($select));
+        return array_map('intval', $this->getConnection()->fetchCol($select));
     }
 }

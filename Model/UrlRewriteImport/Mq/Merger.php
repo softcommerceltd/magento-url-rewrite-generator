@@ -19,25 +19,13 @@ use Magento\Framework\MessageQueue\MergerInterface;
 class Merger implements MergerInterface
 {
     /**
-     * @var OperationListInterfaceFactory
-     */
-    private OperationListInterfaceFactory $operationListFactory;
-
-    /**
-     * @var MergedMessageInterfaceFactory
-     */
-    private MergedMessageInterfaceFactory $mergedMessageFactory;
-
-    /**
      * @param OperationListInterfaceFactory $operationListFactory
      * @param MergedMessageInterfaceFactory $mergedMessageFactory
      */
     public function __construct(
-        OperationListInterfaceFactory $operationListFactory,
-        MergedMessageInterfaceFactory $mergedMessageFactory
+        private OperationListInterfaceFactory $operationListFactory,
+        private MergedMessageInterfaceFactory $mergedMessageFactory
     ) {
-        $this->operationListFactory = $operationListFactory;
-        $this->mergedMessageFactory = $mergedMessageFactory;
     }
 
     /**

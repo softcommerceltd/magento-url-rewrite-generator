@@ -23,11 +23,6 @@ class GenerateProductUrl extends AbstractGenerator
     private const COMMAND_NAME = 'url:generate:product';
 
     /**
-     * @var GetProductEntityDataInterface
-     */
-    private GetProductEntityDataInterface $getProductEntityData;
-
-    /**
      * @param GetProductEntityDataInterface $getProductEntityData
      * @param ResourceConnection $resourceConnection
      * @param ScopeConfigInterface $scopeConfig
@@ -35,13 +30,12 @@ class GenerateProductUrl extends AbstractGenerator
      * @param string|null $name
      */
     public function __construct(
-        GetProductEntityDataInterface $getProductEntityData,
+        private GetProductEntityDataInterface $getProductEntityData,
         ResourceConnection $resourceConnection,
         ScopeConfigInterface $scopeConfig,
         UrlRewriteInterface $urlRewrite,
-        string $name = null
+        ?string $name = null
     ) {
-        $this->getProductEntityData = $getProductEntityData;
         parent::__construct($resourceConnection, $scopeConfig, $urlRewrite, $name);
     }
 

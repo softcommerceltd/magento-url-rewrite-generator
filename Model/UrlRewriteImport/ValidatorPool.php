@@ -24,19 +24,13 @@ class ValidatorPool
     private array $validators;
 
     /**
-     * @var ValidatorFactory
-     */
-    private ValidatorFactory $validatorFactory;
-
-    /**
      * @param ValidatorFactory $validatorFactory
      * @param array $validators
      */
     public function __construct(
-        ValidatorFactory $validatorFactory,
+        private ValidatorFactory $validatorFactory,
         array $validators
     ) {
-        $this->validatorFactory = $validatorFactory;
         $this->validators = $validators;
     }
 

@@ -38,59 +38,14 @@ class UrlRewriteImport implements UrlRewriteImportInterface
     private array $errors = [];
 
     /**
-     * @var FileSystem\Pool
-     */
-    private FileSystem\Pool $filePool;
-
-    /**
-     * @var MergeDataProviderFactory
-     */
-    private MergeDataProviderFactory $mergeUrlDataProviderFactory;
-
-    /**
-     * @var LogProcessorInterface
-     */
-    private LogProcessorInterface $logger;
-
-    /**
-     * @var UrlFinderInterface
-     */
-    private UrlFinderInterface $urlFinder;
-
-    /**
-     * @var UrlPersistInterface
-     */
-    private UrlPersistInterface $urlPersist;
-
-    /**
-     * @var Report
-     */
-    private Report $report;
-
-    /**
      * @var array
      */
     private array $storeInMemory = [];
 
     /**
-     * @var StoreRepositoryInterface
-     */
-    protected StoreRepositoryInterface $storeRepository;
-
-    /**
-     * @var UrlRewriteFactory
-     */
-    private UrlRewriteFactory $urlRewriteFactory;
-
-    /**
      * @var Validator|null
      */
     private ?Validator $validator = null;
-
-    /**
-     * @var ValidatorPool
-     */
-    private ValidatorPool $validatorPool;
 
     /**
      * @param Pool $filePool
@@ -104,25 +59,16 @@ class UrlRewriteImport implements UrlRewriteImportInterface
      * @param ValidatorPool $validatorPool
      */
     public function __construct(
-        FileSystem\Pool $filePool,
-        Report $report,
-        MergeDataProviderFactory $mergeUrlDataProviderFactory,
-        LogProcessorInterface $logger,
-        StoreRepositoryInterface $storeRepository,
-        UrlFinderInterface $urlFinder,
-        UrlPersistInterface $urlPersist,
-        UrlRewriteFactory $urlRewriteFactory,
-        ValidatorPool $validatorPool
+        private FileSystem\Pool $filePool,
+        private Report $report,
+        private MergeDataProviderFactory $mergeUrlDataProviderFactory,
+        private LogProcessorInterface $logger,
+        private StoreRepositoryInterface $storeRepository,
+        private UrlFinderInterface $urlFinder,
+        private UrlPersistInterface $urlPersist,
+        private UrlRewriteFactory $urlRewriteFactory,
+        private ValidatorPool $validatorPool
     ) {
-        $this->filePool = $filePool;
-        $this->report = $report;
-        $this->mergeUrlDataProviderFactory = $mergeUrlDataProviderFactory;
-        $this->logger = $logger;
-        $this->storeRepository = $storeRepository;
-        $this->urlFinder = $urlFinder;
-        $this->urlPersist = $urlPersist;
-        $this->urlRewriteFactory = $urlRewriteFactory;
-        $this->validatorPool = $validatorPool;
     }
 
     /**

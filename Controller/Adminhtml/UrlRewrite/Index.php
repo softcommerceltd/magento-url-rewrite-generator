@@ -23,27 +23,15 @@ class Index extends Action
     public const ADMIN_RESOURCE = 'Magento_UrlRewrite::urlrewrite';
 
     /**
-     * @var PageFactory
-     */
-    private PageFactory $resultPageFactory;
-
-    /**
-     * @var ForwardFactory
-     */
-    private ForwardFactory $resultForwardFactory;
-
-    /**
      * @param Action\Context $context
      * @param PageFactory $resultPageFactory
      * @param ForwardFactory $resultForwardFactory
      */
     public function __construct(
         Action\Context $context,
-        PageFactory $resultPageFactory,
-        ForwardFactory $resultForwardFactory
+        private PageFactory $resultPageFactory,
+        private ForwardFactory $resultForwardFactory
     ) {
-        $this->resultPageFactory = $resultPageFactory;
-        $this->resultForwardFactory = $resultForwardFactory;
         parent::__construct($context);
     }
 

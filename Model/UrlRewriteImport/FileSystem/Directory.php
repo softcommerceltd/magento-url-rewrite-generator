@@ -20,16 +20,10 @@ class Directory
     public const URL_REWRITE_IMPORT_DIR = 'url-rewrite';
 
     /**
-     * @var Filesystem
-     */
-    private Filesystem $filesystem;
-
-    /**
      * @param Filesystem $filesystem
      */
-    public function __construct(Filesystem $filesystem)
+    public function __construct(private Filesystem $filesystem)
     {
-        $this->filesystem = $filesystem;
     }
 
     /**

@@ -18,25 +18,13 @@ use SplFileObject;
 class Pool
 {
     /**
-     * @var CsvSourceFactory
-     */
-    private CsvSourceFactory $csvSourceFactory;
-
-    /**
-     * @var Directory
-     */
-    private Directory $directory;
-
-    /**
      * @param CsvSourceFactory $csvSourceFactory
      * @param Directory $directory
      */
     public function __construct(
-        CsvSourceFactory $csvSourceFactory,
-        Directory $directory
+        private CsvSourceFactory $csvSourceFactory,
+        private Directory $directory
     ) {
-        $this->csvSourceFactory = $csvSourceFactory;
-        $this->directory = $directory;
     }
 
     /**

@@ -20,17 +20,10 @@ use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImportInterface;
 class RequestPath extends AbstractValidator
 {
     /**
-     * @var UrlRewriteHelper
-     */
-    private UrlRewriteHelper $urlRewriteHelper;
-
-    /**
      * @param UrlRewriteHelper $urlRewriteHelper
      */
-    public function __construct(UrlRewriteHelper $urlRewriteHelper)
-    {
-        $this->urlRewriteHelper = $urlRewriteHelper;
-    }
+    public function __construct(private UrlRewriteHelper $urlRewriteHelper)
+    {}
 
     /**
      * @inheritDoc

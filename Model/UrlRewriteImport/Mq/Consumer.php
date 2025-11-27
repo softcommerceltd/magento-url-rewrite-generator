@@ -27,31 +27,6 @@ use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImportInterface;
 class Consumer
 {
     /**
-     * @var SerializerInterface
-     */
-    private SerializerInterface $serializer;
-
-    /**
-     * @var EntityManager
-     */
-    private EntityManager $entityManager;
-
-    /**
-     * @var UrlRewriteImportInterface
-     */
-    private UrlRewriteImportInterface $urlRewriteImport;
-
-    /**
-     * @var LogProcessorInterface
-     */
-    private LogProcessorInterface $logger;
-
-    /**
-     * @var UrlInterface
-     */
-    private UrlInterface $urlBuilder;
-
-    /**
      * @param EntityManager $entityManager
      * @param UrlRewriteImportInterface $urlRewriteImport
      * @param LogProcessorInterface $logger
@@ -59,17 +34,12 @@ class Consumer
      * @param UrlInterface $urlBuilder
      */
     public function __construct(
-        EntityManager $entityManager,
-        UrlRewriteImportInterface $urlRewriteImport,
-        LogProcessorInterface $logger,
-        SerializerInterface $serializer,
-        UrlInterface $urlBuilder
+        private EntityManager $entityManager,
+        private UrlRewriteImportInterface $urlRewriteImport,
+        private LogProcessorInterface $logger,
+        private SerializerInterface $serializer,
+        private UrlInterface $urlBuilder
     ) {
-        $this->entityManager = $entityManager;
-        $this->urlRewriteImport = $urlRewriteImport;
-        $this->logger = $logger;
-        $this->serializer = $serializer;
-        $this->urlBuilder = $urlBuilder;
     }
 
     /**

@@ -44,10 +44,10 @@ class GenerateCategoryUrl extends AbstractGenerator
         if ($idFilter = $input->getOption(self::ID_FILTER)) {
             $entityIds = explode(',', str_replace(' ', '', $idFilter));
         } else {
-            $select = $this->connection->select()
-                ->from($this->connection->getTableName('catalog_category_entity'), 'entity_id')
+            $select = $this->getConnection()->select()
+                ->from($this->getConnection()->getTableName('catalog_category_entity'), 'entity_id')
                 ->where('parent_id > ?', 1);
-            $entityIds = $this->connection->fetchCol($select);
+            $entityIds = $this->getConnection()->fetchCol($select);
         }
 
         return array_map('intval', $entityIds);

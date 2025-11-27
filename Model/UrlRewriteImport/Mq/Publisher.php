@@ -25,36 +25,6 @@ use SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImportInterface;
 class Publisher
 {
     /**
-     * @var BulkManagementInterface
-     */
-    private BulkManagementInterface $bulkManagement;
-
-    /**
-     * @var IdentityGeneratorInterface
-     */
-    private IdentityGeneratorInterface $identityService;
-
-    /**
-     * @var OperationInterfaceFactory
-     */
-    private OperationInterfaceFactory $operationFactory;
-
-    /**
-     * @var Pool
-     */
-    private Pool $filePool;
-
-    /**
-     * @var SerializerInterface
-     */
-    private SerializerInterface $serializer;
-
-    /**
-     * @var UserContextInterface
-     */
-    private UserContextInterface $userContext;
-
-    /**
      * @param BulkManagementInterface $bulkManagement
      * @param IdentityGeneratorInterface $identityService
      * @param OperationInterfaceFactory $operationFactory
@@ -63,19 +33,13 @@ class Publisher
      * @param UserContextInterface $userContextInterface
      */
     public function __construct(
-        BulkManagementInterface $bulkManagement,
-        IdentityGeneratorInterface $identityService,
-        OperationInterfaceFactory $operationFactory,
-        Pool $filePool,
-        SerializerInterface $serializer,
-        UserContextInterface $userContextInterface
+        private BulkManagementInterface $bulkManagement,
+        private IdentityGeneratorInterface $identityService,
+        private OperationInterfaceFactory $operationFactory,
+        private Pool $filePool,
+        private SerializerInterface $serializer,
+        private UserContextInterface $userContext
     ) {
-        $this->bulkManagement = $bulkManagement;
-        $this->identityService = $identityService;
-        $this->operationFactory = $operationFactory;
-        $this->filePool = $filePool;
-        $this->serializer = $serializer;
-        $this->userContext = $userContextInterface;
     }
 
     /**

@@ -21,17 +21,10 @@ class Report
     public const REPORT_FILENAME_TEMPLATE = 'operation_%d.csv';
 
     /**
-     * @var FileSystem\Pool
-     */
-    private FileSystem\Pool $filePool;
-
-    /**
      * @param FileSystem\Pool $filePool
      */
-    public function __construct(FileSystem\Pool $filePool)
-    {
-        $this->filePool = $filePool;
-    }
+    public function __construct(private FileSystem\Pool $filePool)
+    {}
 
     /**
      * @param int $operationId

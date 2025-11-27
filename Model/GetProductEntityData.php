@@ -15,6 +15,7 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Store\Model\ScopeInterface;
 use SoftCommerce\Core\Model\Store\WebsiteStorageInterface;
+use SoftCommerce\Core\Model\Trait\ConnectionTrait;
 use SoftCommerce\Core\Model\Utils\GetEntityMetadataInterface;
 
 /**
@@ -22,25 +23,7 @@ use SoftCommerce\Core\Model\Utils\GetEntityMetadataInterface;
  */
 class GetProductEntityData implements GetProductEntityDataInterface
 {
-    /**
-     * @var AdapterInterface
-     */
-    private AdapterInterface $connection;
-
-    /**
-     * @var GetEntityMetadataInterface
-     */
-    private GetEntityMetadataInterface $getEntityMetadata;
-
-    /**
-     * @var ScopeConfigInterface
-     */
-    private ScopeConfigInterface $scopeConfig;
-
-    /**
-     * @var WebsiteStorageInterface
-     */
-    private WebsiteStorageInterface $websiteStorage;
+    use ConnectionTrait;
 
     /**
      * @param ResourceConnection $resourceConnection
@@ -49,15 +32,11 @@ class GetProductEntityData implements GetProductEntityDataInterface
      * @param WebsiteStorageInterface $websiteStorage
      */
     public function __construct(
-        ResourceConnection $resourceConnection,
-        GetEntityMetadataInterface $getEntityMetadata,
-        ScopeConfigInterface $scopeConfig,
-        WebsiteStorageInterface $websiteStorage
+        private ResourceConnection $resourceConnection,
+        private GetEntityMetadataInterface $getEntityMetadata,
+        private ScopeConfigInterface $scopeConfig,
+        private WebsiteStorageInterface $websiteStorage
     ) {
-        $this->connection = $resourceConnection->getConnection();
-        $this->getEntityMetadata = $getEntityMetadata;
-        $this->scopeConfig = $scopeConfig;
-        $this->websiteStorage = $websiteStorage;
     }
 
     /**
@@ -71,25 +50,25 @@ class GetProductEntityData implements GetProductEntityDataInterface
             $columns[] = "cpe.$linkField";
         }
 
-        $select = $this->connection->select()
+        $select = $this->getConnection()->select()
             ->from(
-                ['cpe' => $this->connection->getTableName('catalog_product_entity')],
+                ['cpe' => $this->getConnection()->getTableName('catalog_product_entity')],
                 $columns
             )
             ->joinLeft(
-                ['ea' => $this->connection->getTableName('eav_attribute')],
+                ['ea' => $this->getConnection()->getTableName('eav_attribute')],
                 'ea.attribute_code = \'visibility\'',
                 null
             )
             ->joinLeft(
-                ['ccp' => $this->connection->getTableName('catalog_category_product')],
+                ['ccp' => $this->getConnection()->getTableName('catalog_category_product')],
                 'cpe.entity_id = ccp.product_id',
                 [
                     'category_id' => new \Zend_Db_Expr('GROUP_CONCAT(DISTINCT ccp.category_id)')
                 ]
             )
             ->joinLeft(
-                ['cpw' => $this->connection->getTableName('catalog_product_website')],
+                ['cpw' => $this->getConnection()->getTableName('catalog_product_website')],
                 'cpe.entity_id = cpw.product_id',
                 [
                     'website_id' => new \Zend_Db_Expr('GROUP_CONCAT(DISTINCT cpw.website_id)')
@@ -105,7 +84,7 @@ class GetProductEntityData implements GetProductEntityDataInterface
             ScopeInterface::SCOPE_WEBSITE
         )) {
             $select->joinLeft(
-                ['cpei' => $this->connection->getTableName('catalog_product_entity_int')],
+                ['cpei' => $this->getConnection()->getTableName('catalog_product_entity_int')],
                 'cpe.entity_id  = cpei.entity_id' .
                 ' AND ea.attribute_id = cpei.attribute_id AND cpei.store_id = 0',
                 null
@@ -147,6 +126,6 @@ class GetProductEntityData implements GetProductEntityDataInterface
             $item['store_id'] = $storeIds;
             $item['category_id'] = isset($item['category_id']) ? explode(',', $item['category_id']) : [];
             return $item;
-        }, $this->connection->fetchAll($select));
+        }, $this->getConnection()->fetchAll($select));
     }
 }

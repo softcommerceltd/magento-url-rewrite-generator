@@ -14,22 +14,16 @@ namespace SoftCommerce\UrlRewriteGenerator\Model\UrlRewriteImport\FileSystem;
 class Uploader extends \Magento\Framework\File\Uploader
 {
     /**
-     * @var Directory
-     */
-    private Directory $directory;
-
-    /**
      * @param Directory $directory
      * @param string $fileId
      * @param array $allowedExtensions
      */
     public function __construct(
-        Directory $directory,
+        private Directory $directory,
         string $fileId,
         array $allowedExtensions = []
     ) {
         $this->_allowedExtensions = $allowedExtensions;
-        $this->directory = $directory;
         parent::__construct($fileId);
     }
 
