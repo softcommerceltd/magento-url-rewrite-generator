@@ -1,5 +1,15 @@
 ## Changelog
 
+### Version 1.3.2
+- **Fix**: Use nullable type syntax for optional PoolInterface parameter
+
+### Version 1.3.1
+- **Fix**: Update MessageStorageInterfaceFactory to MessageStorageFactory
+
+### Version 1.3.0
+- **Refactor**: Use constructor property promotion across commands, controllers and models
+- **Compatibility**: Update PHP requirement - drop 8.0, add 8.4 support
+
 ### Version 1.2.5
 - **Feature**: Add an option to generate product url_key value by store scope [#12]
 
