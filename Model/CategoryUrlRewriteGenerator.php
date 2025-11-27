@@ -20,7 +20,7 @@ use Magento\UrlRewrite\Model\UrlPersistInterface;
 use SoftCommerce\Core\Framework\DataStorageInterface;
 use SoftCommerce\Core\Framework\DataStorageInterfaceFactory;
 use SoftCommerce\Core\Framework\MessageStorageInterface;
-use SoftCommerce\Core\Framework\MessageStorageInterfaceFactory;
+use SoftCommerce\Core\Framework\MessageStorageFactory;
 use SoftCommerce\Core\Model\Source\Status;
 use function implode;
 
@@ -49,7 +49,7 @@ class CategoryUrlRewriteGenerator implements UrlRewriteInterface
      * @param CatalogCategoryUrlRewriteGenerator $categoryUrlRewriteGenerator
      * @param DataStorageInterfaceFactory $dataStorageFactory
      * @param MergeDataProviderFactory $mergeDataProviderFactory
-     * @param MessageStorageInterfaceFactory $messageStorageFactory
+     * @param MessageStorageFactory $messageStorageFactory
      * @param UrlPersistInterface $urlPersist
      */
     public function __construct(
@@ -57,7 +57,7 @@ class CategoryUrlRewriteGenerator implements UrlRewriteInterface
         private CatalogCategoryUrlRewriteGenerator $categoryUrlRewriteGenerator,
         DataStorageInterfaceFactory $dataStorageFactory,
         private MergeDataProviderFactory $mergeUrlDataProviderFactory,
-        MessageStorageInterfaceFactory $messageStorageFactory,
+        MessageStorageFactory $messageStorageFactory,
         private UrlPersistInterface $urlPersist
     ) {
         $this->responseStorage = $dataStorageFactory->create();

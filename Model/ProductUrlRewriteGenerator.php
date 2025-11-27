@@ -29,7 +29,7 @@ use Magento\UrlRewrite\Service\V1\Data\UrlRewriteFactory;
 use SoftCommerce\Core\Framework\DataStorageInterface;
 use SoftCommerce\Core\Framework\DataStorageInterfaceFactory;
 use SoftCommerce\Core\Framework\MessageStorageInterface;
-use SoftCommerce\Core\Framework\MessageStorageInterfaceFactory;
+use SoftCommerce\Core\Framework\MessageStorageFactory;
 use SoftCommerce\Core\Model\Source\StatusInterface;
 use SoftCommerce\Core\Model\Utils\GetEntityMetadataInterface;
 use function implode;
@@ -60,7 +60,7 @@ class ProductUrlRewriteGenerator implements UrlRewriteInterface
      * @param GetEntityMetadataInterface $getEntityMetadata
      * @param GetProductEntityDataInterface $getProductEntityData
      * @param MergeDataProviderFactory $mergeDataProviderFactory
-     * @param MessageStorageInterfaceFactory $messageStorageFactory
+     * @param MessageStorageFactory $messageStorageFactory
      * @param ProductFactory $productFactory
      * @param ProductResource $productResource
      * @param ProductUrlPathGenerator $productUrlPathGenerator
@@ -75,7 +75,7 @@ class ProductUrlRewriteGenerator implements UrlRewriteInterface
         private GetEntityMetadataInterface $getEntityMetadata,
         private GetProductEntityDataInterface $getProductEntityData,
         private MergeDataProviderFactory $mergeUrlDataProviderFactory,
-        MessageStorageInterfaceFactory $messageStorageFactory,
+        MessageStorageFactory $messageStorageFactory,
         private ProductFactory $productFactory,
         private ProductResource $productResource,
         private ProductUrlPathGenerator $productUrlPathGenerator,
