@@ -38,7 +38,7 @@ jobs:
         run: |
           COMPOSER_VERSION=$(jq -r '.version // "0.0.0"' composer.json)
           TAG_VERSION="${{ steps.version.outputs.version }}"
-
+          
           if [ "$COMPOSER_VERSION" != "$TAG_VERSION" ]; then
             echo "WARNING: composer.json version ($COMPOSER_VERSION) doesn't match tag version ($TAG_VERSION)"
           fi
@@ -48,10 +48,10 @@ jobs:
         run: |
           TAG_NAME="${{ steps.version.outputs.tag_name }}"
           VERSION="${{ steps.version.outputs.version }}"
-
+          
           # Get the previous tag
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 ${TAG_NAME}^ 2>/dev/null || echo "")
-
+          
           # Generate changelog entries
           if [ -z "$PREVIOUS_TAG" ]; then
             echo "No previous tag found, including last 10 commits"
@@ -60,13 +60,13 @@ jobs:
             echo "Previous tag: ${PREVIOUS_TAG}"
             COMMITS=$(git log ${PREVIOUS_TAG}..${TAG_NAME} --pretty=format:"%s")
           fi
-
+          
           # Categorize commits
           FEATURES=""
           FIXES=""
           BREAKING=""
           OTHER=""
-
+          
           while IFS= read -r commit; do
             if [[ "$commit" =~ ^feat(\(.*\))?!?:[[:space:]](.*)$ ]] || [[ "$commit" =~ BREAKING[[:space:]]CHANGE ]]; then
               if [[ "$commit" =~ ! ]] || [[ "$commit" =~ BREAKING[[:space:]]CHANGE ]]; then
@@ -83,10 +83,10 @@ jobs:
               OTHER="${OTHER}- ${commit}\n"
             fi
           done <<< "$COMMITS"
-
+          
           # Skip CHANGELOG update - already done by local release process
           echo "CHANGELOG.md already updated by release script"
-
+          
           # Try to extract from CHANGELOG.md first
           if [ -f "CHANGELOG.md" ]; then
             # Extract the latest version section from CHANGELOG.md
@@ -95,7 +95,7 @@ jobs:
               found && /^## \[/ { exit }
               found { print }
             ' CHANGELOG.md > release_notes.md
-
+            
             # If we got content from CHANGELOG, just add the full changelog link
             if [ -s release_notes.md ]; then
               echo "" >> release_notes.md
@@ -146,13 +146,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG_NAME="${{ steps.version.outputs.tag_name }}"
-
+          
           # Check if release already exists
           if gh release view "${TAG_NAME}" &>/dev/null; then
             echo "Release ${TAG_NAME} already exists, skipping"
             exit 0
           fi
-
+          
           # Create release with "Release v1.2.3" format
           gh release create "${TAG_NAME}" \
             --title "Release ${TAG_NAME}" \
