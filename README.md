@@ -96,7 +96,7 @@ bin/magento url_rewrite:delete -e product,category -s 1,2,3
 ```
 
 ## Support
-Soft Commerce Ltd <br />
+Byte8 Ltd <br />
 support@softcommerce.io
 
 ## License
@@ -108,9 +108,9 @@ Please see `LICENSE.txt` for full details of the OSL 3.0 license.
 ## Thanks for dropping by
 
 <p align="center">
-    <a href="https://softcommerce.co.uk" target="_blank">
-        <img src="https://softcommerce.co.uk/pub/media/banner/logo.svg" width="200" alt="Soft Commerce Ltd" />
+    <a href="https://byte8.io" target="_blank">
+        <img src="https://byte8.io/pub/media/banner/logo.svg" width="200" alt="Byte8 Ltd" />
     </a>
     <br />
-    <a href="https://softcommerce.co.uk/" target="_blank">https://softcommerce.io/</a>
+    <a href="https://byte8.io/" target="_blank">https://softcommerce.io/</a>
 </p>
